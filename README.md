@@ -1,8 +1,8 @@
 # Gesture-Localisation-Robot
 
-Joint recog.:
+Joint recog.:<br />
 https://developers.google.com/mediapipe/solutions/vision/gesture_recognizer/python#live-stream
 
-IMPORTANT IMPORTS:
-import cv2
+IMPORTANT IMPORTS:<br />
+import cv2 <br />
 import tensorflow as tf  # or import torch
