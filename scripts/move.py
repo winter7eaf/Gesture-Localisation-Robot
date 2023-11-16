@@ -4,17 +4,23 @@ from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
 
 
-DISTANCE_THRESHOLD = 3
+DISTANCE_THRESHOLD = 1
 
 
 def laser_callback(msg):
     # get the distance of in front of the robot
-    distance = msg.ranges[len(msg.ranges) // 2]
+    distance_front = msg.ranges[len(msg.ranges) // 2]
+    # get the distance of the 30 degrees to the left of the robot
+    distance_left = msg.ranges[len(msg.ranges) // 3]
+    # get the distance of the 30 degrees to the right of the robot
+    distance_right = msg.ranges[len(msg.ranges) // 3 * 2]
+
+    distance = min(distance_front, distance_left, distance_right)
 
     # if distance is greater than 1 meter move forward
     if distance > DISTANCE_THRESHOLD:
         base_data = Twist()
-        base_data.linear.x = 0.1
+        base_data.linear.x = 0.5
         pub.publish(base_data)
 
     # if distance is less than 1 meter turn right
