@@ -5,7 +5,7 @@ from geometry_msgs.msg import Twist
 
 
 DISTANCE_THRESHOLD = 1
-source /home/junijoo/catkin_ws/devel/setup.bash
+# source /home/junijoo/catkin_ws/devel/setup.bash
 
 def laser_callback(msg):
     # get the distance of in front of the robot
