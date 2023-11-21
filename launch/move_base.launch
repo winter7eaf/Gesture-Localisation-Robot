@@ -7,7 +7,7 @@
 
  <!--- Run AMCL -->
 <!--     <include file="$(find amcl)/examples/amcl_omni.launch" /> -->
-    <node name="map_server" pkg="map_server" type="map_server" args="$(find Gesture-Localisation-Robot)/data/map.pgm 0.025" />
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find Gesture-Localisation-Robot)/data/cafe2.yaml" />
     <node pkg="stage_ros" type="stageros" name="stageros" args="$(find Gesture-Localisation-Robot)/data/cafe2.world" respawn="false" >
     <param name="base_watchdog_timeout" value="0.2"/>
   </node>
@@ -18,6 +18,10 @@
     <rosparam file="$(find Gesture-Localisation-Robot)/config/global_costmap_params.yaml" command="load" />
     <rosparam file="$(find Gesture-Localisation-Robot)/config/base_local_planner_params.yaml" command="load" />
  </node>
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find Gesture-Localisation-Robot)/demo.rviz"/>
+    <node name="amcl" pkg="amcl" type="amcl" args="scan:=base_scan">
+        <!-- To receive less warnings but get less publications. See: http://wiki.ros.org/gmapping-->
+        <param name="transform_publish_period" value="0.08"/>
+    </node>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find Gesture-Localisation-Robot)/path_finding.rviz"/>
 
 </launch>
