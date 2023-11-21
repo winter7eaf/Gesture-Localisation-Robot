@@ -1,12 +1,16 @@
 <launch>
 
    <master auto="start"/>
+   <param name="/use_sim_time" value="true"/>
  <!-- Run the map server -->
 <!--     <node name="map_server" pkg="map_server" type="map_server" args="$(find my_map_package)/my_map.pgm my_map_resolution"/> -->
 
  <!--- Run AMCL -->
 <!--     <include file="$(find amcl)/examples/amcl_omni.launch" /> -->
-
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find Gesture-Localisation-Robot)/data/map.pgm 0.025" />
+    <node pkg="stage_ros" type="stageros" name="stageros" args="$(find Gesture-Localisation-Robot)/data/cafe2.world" respawn="false" >
+    <param name="base_watchdog_timeout" value="0.2"/>
+  </node>
    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <rosparam file="$(find Gesture-Localisation-Robot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
     <rosparam file="$(find Gesture-Localisation-Robot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
@@ -14,5 +18,6 @@
     <rosparam file="$(find Gesture-Localisation-Robot)/config/global_costmap_params.yaml" command="load" />
     <rosparam file="$(find Gesture-Localisation-Robot)/config/base_local_planner_params.yaml" command="load" />
  </node>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find Gesture-Localisation-Robot)/demo.rviz"/>
 
 </launch>
