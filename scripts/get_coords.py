@@ -9,9 +9,11 @@ DISTANCE_THRESHOLD = 1
 
 def pose_callback(msg):
     # print the coordinates of the robot
+    print("coords: ")
     print("x: ", msg.pose.pose.position.x)
     print("y: ", msg.pose.pose.position.y)
     print("z: ", msg.pose.pose.position.z)
+    print("orientation: ")
     print("ow: ", msg.pose.pose.orientation.w)
     print("ox: ", msg.pose.pose.orientation.x)
     print("oy: ", msg.pose.pose.orientation.y)
