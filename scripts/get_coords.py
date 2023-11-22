@@ -1,11 +1,7 @@
 #!/usr/bin/python3
 import rospy
-from geometry_msgs.msg import Twist, PoseWithCovarianceStamped
+from geometry_msgs.msg import PoseWithCovarianceStamped
 
-
-
-DISTANCE_THRESHOLD = 1
-# source /home/junijoo/catkin_ws/devel/setup.bash
 
 def pose_callback(msg):
     # print the coordinates of the robot
