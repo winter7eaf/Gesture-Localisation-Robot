@@ -7,7 +7,7 @@ from geometry_msgs.msg import Quaternion, Pose
 from std_msgs.msg import String
 
 
-COORD_TO_MOVE_TO = (17, 4)
+COORD_TO_MOVE_TO = None
 message = None
 TOLERANCE = 0.2
 DISTANCE_TOLERANCE = 0.5
@@ -17,7 +17,6 @@ told_about_finished = False
 def pose_callback(msg):
     global message
     message = msg
-    print("got message")
 
 
 def move_to_goal_callback(msg):
@@ -30,6 +29,8 @@ def move_to_goal_callback(msg):
 def move():
     global message, told_about_finished
     if not message:
+        return
+    if not COORD_TO_MOVE_TO:
         return
     # coords
     x, y = message.pose.pose.position.x, message.pose.pose.position.y
@@ -50,21 +51,18 @@ def move():
 
     if (target_yaw - yaw) > TOLERANCE:
         # turn left
-        print("turn left")
         base_data = Twist()
         base_data.angular.z = 0.3
         # base_data.linear.x = 0.2
         movement_pub.publish(base_data)
     elif (target_yaw - yaw) < -TOLERANCE:
         # turn right
-        print("turn right")
         base_data = Twist()
         base_data.angular.z = -0.3
         # base_data.linear.x = 0.2
         movement_pub.publish(base_data)
     else:
         # move forward
-        print("move forward")
         base_data = Twist()
         base_data.linear.x = 0.4
         movement_pub.publish(base_data)
