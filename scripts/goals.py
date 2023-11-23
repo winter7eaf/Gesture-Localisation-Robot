@@ -74,7 +74,7 @@ if answer == '1':
             rospy.loginfo("Goal achieved!")
         else:
             rospy.loginfo("Failed to reach goal.")
-    rospy.slee(10)
+    rospy.sleep(10)
     home = send_goal(goals[0])
     if home:
         rospy.loginfo("home achieved!")
