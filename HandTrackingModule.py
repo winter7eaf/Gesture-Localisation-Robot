@@ -239,6 +239,7 @@ def main():
 
             fingers1 = detector.fingersUp(hand1)
             totalFingers1 = fingers1.count(1)
+            stopCamera = False
 
             if totalFingers1 == lastGesture1:
                 if gesture1StartTime is None:
@@ -251,10 +252,16 @@ def main():
                     if time.time() - gesture1StartTime >= 3:
                         print(f"\nHand 1 Going to: {'table ' + str(totalFingers1) if totalFingers1 != 0 else 'Till'}", end=" ")
                         cv2.putText(img, str(totalFingers1), (45, 375), cv2.FONT_HERSHEY_PLAIN, 10, (255, 0, 0), 25)
+                        stopCamera = True
                         gesture1StartTime = None  # Reset the start time
             else:
                 lastGesture1 = totalFingers1
                 gesture1StartTime = time.time()  # Start the countdown
+
+            if stopCamera:
+                cap.release()
+                cv2.destroyAllWindows()
+                return
 
             # Print the real-time total number of fingers
             #print(f"Hand 1 ={totalFingers1}")
