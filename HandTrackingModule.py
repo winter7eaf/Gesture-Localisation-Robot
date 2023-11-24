@@ -215,7 +215,7 @@ def main():
     cap = cv2.VideoCapture(0)
 
     # Initialize the HandDetector class with the given parameters
-    detector = HandDetector(staticMode=False, maxHands=2, modelComplexity=1, detectionCon=0.5, minTrackCon=0.5)
+    detector = HandDetector(staticMode=False, maxHands=1, modelComplexity=1, detectionCon=0.5, minTrackCon=0.5)
 
     # Continuously get frames from the webcam
     while True:
