@@ -259,7 +259,7 @@ def main():
 
                        # confirmationStartTime = time.time()  # Start the text display timer
                         print(f"\nHand 1 Going to: {'table ' + str(totalFingers1) if totalFingers1 != 0 else 'Till'}", end=" ")
-                        cv2.putText(img, str(totalFingers1) if totalFingers1 != 0 else "Till", (45, 375),
+                        cv2.putText(img, "table " +str(totalFingers1) if totalFingers1 != 0 else "Till", (45, 375),
                                     cv2.FONT_HERSHEY_PLAIN, 10, (255, 0, 0), 25)
                         #cv2.putText(img, str(totalFingers1), (45, 375), cv2.FONT_HERSHEY_PLAIN, 10, (255, 0, 0), 25)
 
@@ -270,13 +270,15 @@ def main():
                         while time.time() - confirmationStartTime < 1:
                             cv2.imshow("Image", img)
                             if cv2.waitKey(1) & 0xFF == ord('q'):  # Add a way to break the loop if needed
-                                stopCamera = True
+
                                 break
 
+                            stopCamera = True
+
                         # After one second, redraw the image without the text and display it
-                        img = detector.findHands(img)
-                        cv2.imshow("Image", img)
-                        confirmationStartTime = None  # Reset the confirmation start time
+                        #img = detector.findHands(img)
+                        #cv2.imshow("Image", img)
+                        #confirmationStartTime = None  # Reset the confirmation start time
 
                         #Check if the text has been displayed for 1 second
                         # if confirmationStartTime is not None and time.time() - confirmationStartTime < 1:
