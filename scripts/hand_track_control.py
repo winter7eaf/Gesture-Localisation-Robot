@@ -51,6 +51,8 @@ class HandDetector:
         :param draw: Flag to draw the output on the image.
         :return: Image with or without drawings
         """
+        if (img is None):
+            return None, None
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(imgRGB)
         allHands = []
@@ -260,7 +262,8 @@ def start_camera_and_read_hand():
             length, info, img = detector.findDistance(lm_list[8][0:2], lm_list[12][0:2], img, color=(255, 0, 255),
                                                       scale=10)
 
-        cv2.imshow("Image", img)
+        if img is not None:
+            cv2.imshow("Image", img)
         cv2.waitKey(1)
 
 
