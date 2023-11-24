@@ -210,7 +210,7 @@ def start_camera_and_read_hand():
 
     # Initialize the HandDetector class with the given parameters
     detector = HandDetector(staticMode=False, maxHands=1, modelComplexity=1, detectionCon=0.5, minTrackCon=0.5)
-    print("Hand Detector Initialized"
+    print("Hand Detector Initialized")
 
     while capturing:
         success, img = cap.read()
