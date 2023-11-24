@@ -1,8 +1,4 @@
-"""
-Hand Tracking Module
-
-Website: https://www.computervision.zone/
-"""
+#!/usr/bin/python3
 
 import math
 import cv2
