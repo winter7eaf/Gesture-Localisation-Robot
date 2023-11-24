@@ -207,6 +207,8 @@ def main():
     gesture2StartTime = None
     lastGesture2 = None
 
+    ConfirmationStartTime = None
+
 
     # Initialize the webcam to capture video
     # The '2' indicates the third camera connected to your computer; '0' would usually refer to the built-in camera
@@ -248,12 +250,38 @@ def main():
                     #print(f"Hand1 = {totalFingers1}", end=" ")
                     # Print the countdown
                     countdown1 = 3 - int(time.time() - gesture1StartTime)
-                    print(f"Hand1 = {totalFingers1}, Hand1 countdown: {countdown1}", end=" ")
+                    print(f"Hand = {totalFingers1}, countdown: {countdown1}", end=" ")
+                    cv2.putText(img, str(countdown1), (45, 375), cv2.FONT_HERSHEY_PLAIN, 10, (255, 0, 0), 25)
                     if time.time() - gesture1StartTime >= 3:
+                        confirmationStatement = f"\nHand 1 Going to: {'table ' + str(totalFingers1) if totalFingers1 != 0 else 'Till'}"
+                        #print(confirmationStatement, end=" ")
+                        #print(f"\nHand 1 Going to: {'table ' + str(totalFingers1) if totalFingers1 != 0 else 'Till'}", end=" ")
+
+                        ConfirmationStartTime = time.time()  # Start the text display timer
                         print(f"\nHand 1 Going to: {'table ' + str(totalFingers1) if totalFingers1 != 0 else 'Till'}", end=" ")
                         cv2.putText(img, str(totalFingers1), (45, 375), cv2.FONT_HERSHEY_PLAIN, 10, (255, 0, 0), 25)
                         stopCamera = True
                         gesture1StartTime = None  # Reset the start time
+
+                        # Print the confirmation statement for one second
+                        while time.time() - ConfirmationStartTime < 1:
+                            print(confirmationStatement, end=" ")
+                            cv2.putText(img, str(totalFingers1), (45, 375), cv2.FONT_HERSHEY_PLAIN, 10, (255, 0, 0), 25)
+
+                            #time.sleep(0.1)  # Adjust this value to control the frequency of the prints
+
+                        # Clear the confirmation by printing a carriage return and spaces
+                        print('\r' + ' ' * len(confirmationStatement) + '\r', end='')
+                        ConfirmationStartTime = None  # Reset the confirmation start time
+
+                    # Check if the text has been displayed for 1 second
+                    # if ConfirmationStartTime is not None and time.time() - ConfirmationStartTime >= 1:
+                    #     # Clear the confirmation by printing a carriage return and spaces
+                    #     print('\r' + ' ' * len(confirmationStatement) + '\r', end='')
+                    #     ConfirmationStartTime = None  # Reset the confirmation start time
+                    #     # Clear the text by redrawing your image without the text
+                    #     #img = your_function_to_redraw_image()
+                    #     textDisplayStartTime = None  # Reset the text display start time
             else:
                 lastGesture1 = totalFingers1
                 gesture1StartTime = time.time()  # Start the countdown
