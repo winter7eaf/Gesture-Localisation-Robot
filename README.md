@@ -26,3 +26,7 @@ roscore
 roslaunch navigation_stage move_base_amcl_2.5cm.launch
 ```
 Change the last part respectively 
+
+Install:
+mediapipe
+opencv
