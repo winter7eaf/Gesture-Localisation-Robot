@@ -216,86 +216,60 @@ def start_camera_and_read_hand():
         hands, img = detector.findHands(img, draw=True, flipType=True)
 
         if hands:
+            hand = hands[0]
+            lm_list = hand["lmList"]
+
+            fingers = detector.fingersUp(hand)
+            total_fingers = fingers.count(1)
+            stop_camera = False
+
+            if total_fingers == last_gesture:
+                if gesture_start_time is None:
+                    gesture_start_time = time.time()
+                else:
+                    countdown = 3 - int(time.time() - gesture_start_time)
+                    print(f"Hand = {total_fingers}, countdown: {countdown}", end=" ")
+                    cv2.putText(img, str(countdown), (10,70), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 5)
+                    if time.time() - gesture_start_time >= 3:
+                        print(f"\nHand 1 Going to: {'table ' + str(total_fingers) if total_fingers != 0 else 'Till'}", end=" ")
+                        cv2.putText(img, "table " +str(total_fingers) if total_fingers != 0 else "Till", (45, 375),
+                                    cv2.FONT_HERSHEY_PLAIN, 10, (255, 0, 0), 25)
+
+                        gesture_start_time = None
+
+                        confirmation_start_time = time.time()
+
+                        while time.time() - confirmation_start_time < 1:
+                            cv2.imshow("Image", img)
+                            if cv2.waitKey(1) & 0xFF == ord('q'):
+                                break
+
+                            stop_camera = True
+
+            else:
+                last_gesture = total_fingers
+                gesture_start_time = time.time()
+
+            if stop_camera:
+                cap.release()
+                cv2.destroyAllWindows()
+                print(f"Final Hand = {total_fingers}")
+                return
+
+            length, info, img = detector.findDistance(lm_list[8][0:2], lm_list[12][0:2], img, color=(255, 0, 255),
+                                                        scale=10)
+
+            print(" ")
+
+        cv2.imshow("Image", img)
+        cv2.waitKey(1)
+
 
 
 
 def main():
 
-    gesture1StartTime = None
-    lastGesture1 = None
-
-    # Initialize the webcam to capture video
-    # The '2' indicates the third camera connected to your computer; '0' would usually refer to the built-in camera
-    cap = cv2.VideoCapture(0)
-
-    # Initialize the HandDetector class with the given parameters
-    detector = HandDetector(staticMode=False, maxHands=1, modelComplexity=1, detectionCon=0.5, minTrackCon=0.5)
-
-    # Continuously get frames from the webcam
-    while True:
-        # Capture each frame from the webcam
-        # 'success' will be True if the frame is successfully captured, 'img' will contain the frame
-        success, img = cap.read()
-
-        # Find hands in the current frame
-        # The 'draw' parameter draws landmarks and hand outlines on the image if set to True
-        # The 'flipType' parameter flips the image, making it easier for some detections
-        hands, img = detector.findHands(img, draw=True, flipType=True)
-
-        # Check if any hands are detected
-        if hands:
-            # Information for the first hand detected
-            hand1 = hands[0]  # Get the first hand detected
-            lmList1 = hand1["lmList"]  # List of 21 landmarks for the first hand
-
-            fingers1 = detector.fingersUp(hand1)
-            totalFingers1 = fingers1.count(1)
-            stopCamera = False
-
-            if totalFingers1 == lastGesture1:
-                if gesture1StartTime is None:
-                    gesture1StartTime = time.time()
-                else:
-                    # Print the countdown
-                    countdown1 = 3 - int(time.time() - gesture1StartTime)
-                    print(f"Hand = {totalFingers1}, countdown: {countdown1}", end=" ")
-                    cv2.putText(img, str(countdown1), (10,70), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 5)
-                    if time.time() - gesture1StartTime >= 3:
-                        print(f"\nHand 1 Going to: {'table ' + str(totalFingers1) if totalFingers1 != 0 else 'Till'}", end=" ")
-                        cv2.putText(img, "table " +str(totalFingers1) if totalFingers1 != 0 else "Till", (45, 375),
-                                    cv2.FONT_HERSHEY_PLAIN, 10, (255, 0, 0), 25)
-
-                        gesture1StartTime = None  # Reset the start time
-                        confirmationStartTime = time.time() # Start the text display timer
-
-                        # Display the image with the text for one second
-                        while time.time() - confirmationStartTime < 1:
-                            cv2.imshow("Image", img)
-                            if cv2.waitKey(1) & 0xFF == ord('q'):  # Add a way to break the loop if needed
-                                break
-
-                            stopCamera = True
-
-            else:
-                lastGesture1 = totalFingers1
-                gesture1StartTime = time.time()  # Start the countdown
-
-            if stopCamera:
-                cap.release()
-                cv2.destroyAllWindows()
-                return
-
-            # Calculate distance between specific landmarks on the first hand and draw it on the image
-            length, info, img = detector.findDistance(lmList1[8][0:2], lmList1[12][0:2], img, color=(255, 0, 255),
-                                                      scale=10)
-
-            print(" ")  # New line for better readability of the printed output
-
-        # Display the image in a window
-        cv2.imshow("Image", img)
-
-        # Keep the window open and update it for each frame; wait for 1 millisecond between frames
-        cv2.waitKey(1)
+    start_camera_and_read_hand()
 
 
 if __name__ == "__main__":
