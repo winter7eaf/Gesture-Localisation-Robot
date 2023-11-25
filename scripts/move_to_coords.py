@@ -4,6 +4,7 @@ from geometry_msgs.msg import Twist, PoseWithCovarianceStamped
 import math
 import time
 from geometry_msgs.msg import Quaternion, Pose
+from sensor_msgs.msg import LaserScan
 from std_msgs.msg import String
 
 
@@ -13,10 +14,15 @@ TOLERANCE = 0.2
 DISTANCE_TOLERANCE = 0.5
 told_about_finished = False
 
+OBSTACLE_DISTANCE_THRESHOLD = 0.2  # meters for obstacle detection
+TURNING_SPEED = 0.5  # Speed at which the robot turns for obstacle avoidance
+FORWARD_SPEED = 0.2  # Forward movement speed towards the goal
+ANGLE_RANGE = 30  # Angle range to consider for each direction (in degrees for obstacle detection)
 
 def pose_callback(msg):
     global message
     message = msg
+    print("pose")
 
 
 def move_to_goal_callback(msg):
@@ -25,12 +31,35 @@ def move_to_goal_callback(msg):
     told_about_finished = False
     print("got new goal")
 
+def find_clear_direction(scan_data):
+    """
+    Analyzes the LIDAR scan data to find the clearest direction.
+    """
+    num_ranges = len(scan_data.ranges)
+    segment_size = int(ANGLE_RANGE / 360 * num_ranges)
 
-def move():
+    left_segment = scan_data.ranges[:segment_size]
+    right_segment = scan_data.ranges[-segment_size:]
+    front_segment = scan_data.ranges[num_ranges//2 - segment_size//2:num_ranges//2 + segment_size//2]
+
+    min_distance_left = min(left_segment)
+    min_distance_right = min(right_segment)
+    min_distance_front = min(front_segment)
+
+    if min_distance_front > OBSTACLE_DISTANCE_THRESHOLD:
+        return 'front'
+    elif min_distance_left > min_distance_right:
+        return 'left'
+    else:
+        return 'right'
+
+def move(movement_pub, scan_data):
     global message, told_about_finished
     if not message:
+        print("no pose")
         return
     if not COORD_TO_MOVE_TO:
+        print("no coords")
         return
     # coords
     x, y = message.pose.pose.position.x, message.pose.pose.position.y
@@ -38,6 +67,12 @@ def move():
 
     # calculate the distance to the target
     distance = math.sqrt((COORD_TO_MOVE_TO[0] - x) ** 2 + (COORD_TO_MOVE_TO[1] - y) ** 2)
+    # calculate the yaw to the target
+    target_yaw = math.atan2(COORD_TO_MOVE_TO[1] - y, COORD_TO_MOVE_TO[0] - x)
+
+    clear_direction = find_clear_direction(scan_data)
+    twist = Twist()
+
     if distance < DISTANCE_TOLERANCE:
         if not told_about_finished:
             string_data = String()
@@ -46,42 +81,118 @@ def move():
             told_about_finished = True
         return
 
-    # calculate the yaw to the target
-    target_yaw = math.atan2(COORD_TO_MOVE_TO[1] - y, COORD_TO_MOVE_TO[0] - x)
-
-    if (target_yaw - yaw) > TOLERANCE:
-        # turn left
-        base_data = Twist()
-        base_data.angular.z = 0.3
-        # base_data.linear.x = 0.2
-        movement_pub.publish(base_data)
-    elif (target_yaw - yaw) < -TOLERANCE:
-        # turn right
-        base_data = Twist()
-        base_data.angular.z = -0.3
-        # base_data.linear.x = 0.2
-        movement_pub.publish(base_data)
+    if clear_direction != 'front':
+        # If there's an obstacle, turn towards the clearest direction
+        twist.angular.z = TURNING_SPEED if clear_direction == 'left' else -TURNING_SPEED
     else:
-        # move forward
-        base_data = Twist()
-        base_data.linear.x = 0.4
-        movement_pub.publish(base_data)
+        # If the path is clear, adjust heading towards the target
+        angle_diff = target_yaw - yaw
+        if abs(angle_diff) > TOLERANCE:
+            twist.angular.z = TURNING_SPEED if angle_diff > 0 else -TURNING_SPEED
+        else:
+            # Move forward if facing the target
+            twist.linear.x = FORWARD_SPEED
 
+    movement_pub.publish(twist)
+
+    # if (target_yaw - yaw) > TOLERANCE:
+    #     # turn left
+    #     base_data = Twist()
+    #     base_data.angular.z = 0.3
+    #     # base_data.linear.x = 0.2
+    #     movement_pub.publish(base_data)
+    # elif (target_yaw - yaw) < -TOLERANCE:
+    #     # turn right
+    #     base_data = Twist()
+    #     base_data.angular.z = -0.3
+    #     # base_data.linear.x = 0.2
+    #     movement_pub.publish(base_data)
+    # else:
+    #     # move forward
+    #     base_data = Twist()
+    #     base_data.linear.x = 0.4
+    #     movement_pub.publish(base_data)
+    #
+    # if clear_direction == 'front':
+    #     if abs(target_yaw - yaw) > TOLERANCE:
+    #         twist.angular.z = TURNING_SPEED if target_yaw - yaw > 0 else -TURNING_SPEED
+    #     else:
+    #         twist.linear.x = FORWARD_SPEED
+    # elif clear_direction == 'left':
+    #     twist.angular.z = TURNING_SPEED
+    # else:  # clear_direction == 'right'
+    #     twist.angular.z = -TURNING_SPEED
+    #
+    # movement_pub.publish(twist)
+
+# def move(movement_pub, scan_data):
+#     global message, told_about_finished
+#     if not message or not COORD_TO_MOVE_TO:
+#         return
+#
+#     x, y = message.pose.pose.position.x, message.pose.pose.position.y
+#     yaw = getHeading(message.pose.pose.orientation)
+#
+#     # Calculate the distance and yaw to the target
+#     distance_to_goal = math.sqrt((COORD_TO_MOVE_TO[0] - x) ** 2 + (COORD_TO_MOVE_TO[1] - y) ** 2)
+#     target_yaw = math.atan2(COORD_TO_MOVE_TO[1] - y, COORD_TO_MOVE_TO[0] - x)
+#
+#     twist = Twist()
+#
+#     # Check for obstacles first
+#     clear_direction = find_clear_direction(scan_data)
+#     if clear_direction != 'front':
+#         # If there's an obstacle, prioritize avoiding it
+#         twist.angular.z = TURNING_SPEED if clear_direction == 'left' else -TURNING_SPEED
+#     elif distance_to_goal < DISTANCE_TOLERANCE:
+#         # If near the goal, stop and signal completion
+#         if not told_about_finished:
+#             string_data = String()
+#             string_data.data = "finished"
+#             move_to_coords_pub.publish(string_data)
+#             told_about_finished = True
+#     else:
+#         # If no immediate obstacles, navigate towards the target
+#         if abs(target_yaw - yaw) > TOLERANCE:
+#             # Adjust heading to face the target
+#             twist.angular.z = TURNING_SPEED if target_yaw - yaw > 0 else -TURNING_SPEED
+#         else:
+#             # Move forward if facing the target
+#             twist.linear.x = FORWARD_SPEED
+#
+#     movement_pub.publish(twist)
 
 
 def main():
+    print("0")
     rospy.init_node('move_to_coords')
     global movement_pub, move_to_coords_pub
     movement_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=100)
+    print("1")
     move_to_coords_pub = rospy.Publisher('/move_to_coords', String, queue_size=100)
+    print("2")
     rospy.Subscriber('/amcl_pose', PoseWithCovarianceStamped, pose_callback)
     rospy.Subscriber('/move_to_goal', Pose, move_to_goal_callback)
+    rospy.Subscriber('/scan', LaserScan, lambda scan_data: move(movement_pub, scan_data))
+    print("3")
 
+
+    # while not rospy.is_shutdown():
+    #     move()
+    #     time.sleep(0.1)
+    #
+    # rospy.spin()
+
+    # rate = rospy.Rate(10)  # 10 Hz
     while not rospy.is_shutdown():
-        move()
-        time.sleep(0.1)
+        if message and COORD_TO_MOVE_TO:
+            print("I am here")
+            scan_data = rospy.wait_for_message('/scan', LaserScan)
+            move(movement_pub, scan_data)
+        # rate.sleep()
 
     rospy.spin()
+    rospy.loginfo()
 def rotateQuaternion(q_orig, yaw):
     """
     Converts a basic rotation about the z-axis (in radians) into the
