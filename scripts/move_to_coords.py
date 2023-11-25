@@ -17,7 +17,7 @@ scan_data = None
 
 OBSTACLE_DISTANCE_THRESHOLD = 0.2  # meters for obstacle detection
 TURNING_SPEED = 0.5  # Speed at which the robot turns for obstacle avoidance
-FORWARD_SPEED = 0.2  # Forward movement speed towards the goal
+FORWARD_SPEED = 0.6  # Forward movement speed towards the goal
 ANGLE_RANGE = 30  # Angle range to consider for each direction (in degrees for obstacle detection)
 
 def pose_callback(msg):
@@ -90,6 +90,7 @@ def move():
 
     if clear_direction != 'front':
         # If there's an obstacle, turn towards the clearest direction
+        print(f"doing evasive action: {clear_direction}")
         twist.angular.z = TURNING_SPEED if clear_direction == 'left' else -TURNING_SPEED
     else:
         # If the path is clear, adjust heading towards the target
@@ -102,103 +103,23 @@ def move():
 
     movement_pub.publish(twist)
 
-    # if (target_yaw - yaw) > TOLERANCE:
-    #     # turn left
-    #     base_data = Twist()
-    #     base_data.angular.z = 0.3
-    #     # base_data.linear.x = 0.2
-    #     movement_pub.publish(base_data)
-    # elif (target_yaw - yaw) < -TOLERANCE:
-    #     # turn right
-    #     base_data = Twist()
-    #     base_data.angular.z = -0.3
-    #     # base_data.linear.x = 0.2
-    #     movement_pub.publish(base_data)
-    # else:
-    #     # move forward
-    #     base_data = Twist()
-    #     base_data.linear.x = 0.4
-    #     movement_pub.publish(base_data)
-    #
-    # if clear_direction == 'front':
-    #     if abs(target_yaw - yaw) > TOLERANCE:
-    #         twist.angular.z = TURNING_SPEED if target_yaw - yaw > 0 else -TURNING_SPEED
-    #     else:
-    #         twist.linear.x = FORWARD_SPEED
-    # elif clear_direction == 'left':
-    #     twist.angular.z = TURNING_SPEED
-    # else:  # clear_direction == 'right'
-    #     twist.angular.z = -TURNING_SPEED
-    #
-    # movement_pub.publish(twist)
-
-# def move(movement_pub, scan_data):
-#     global message, told_about_finished
-#     if not message or not COORD_TO_MOVE_TO:
-#         return
-#
-#     x, y = message.pose.pose.position.x, message.pose.pose.position.y
-#     yaw = getHeading(message.pose.pose.orientation)
-#
-#     # Calculate the distance and yaw to the target
-#     distance_to_goal = math.sqrt((COORD_TO_MOVE_TO[0] - x) ** 2 + (COORD_TO_MOVE_TO[1] - y) ** 2)
-#     target_yaw = math.atan2(COORD_TO_MOVE_TO[1] - y, COORD_TO_MOVE_TO[0] - x)
-#
-#     twist = Twist()
-#
-#     # Check for obstacles first
-#     clear_direction = find_clear_direction(scan_data)
-#     if clear_direction != 'front':
-#         # If there's an obstacle, prioritize avoiding it
-#         twist.angular.z = TURNING_SPEED if clear_direction == 'left' else -TURNING_SPEED
-#     elif distance_to_goal < DISTANCE_TOLERANCE:
-#         # If near the goal, stop and signal completion
-#         if not told_about_finished:
-#             string_data = String()
-#             string_data.data = "finished"
-#             move_to_coords_pub.publish(string_data)
-#             told_about_finished = True
-#     else:
-#         # If no immediate obstacles, navigate towards the target
-#         if abs(target_yaw - yaw) > TOLERANCE:
-#             # Adjust heading to face the target
-#             twist.angular.z = TURNING_SPEED if target_yaw - yaw > 0 else -TURNING_SPEED
-#         else:
-#             # Move forward if facing the target
-#             twist.linear.x = FORWARD_SPEED
-#
-#     movement_pub.publish(twist)
 
 
 def main():
-    print("0")
     rospy.init_node('move_to_coords')
     global movement_pub, move_to_coords_pub
     movement_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=100)
-    print("1")
     move_to_coords_pub = rospy.Publisher('/move_to_coords', String, queue_size=100)
-    print("2")
     rospy.Subscriber('/amcl_pose', PoseWithCovarianceStamped, pose_callback)
     rospy.Subscriber('/move_to_goal', Pose, move_to_goal_callback)
     rospy.Subscriber('/base_scan', LaserScan, scan_data_callback)
-    print("3")
 
-
-    # while not rospy.is_shutdown():
-    #     move()
-    #     time.sleep(0.1)
-    #
-    # rospy.spin()
-
-    # rate = rospy.Rate(10)  # 10 Hz
     while not rospy.is_shutdown():
         if message and COORD_TO_MOVE_TO:
             move()
         time.sleep(0.1)
 
-    print("out of while")
     rospy.spin()
-    rospy.loginfo()
 def rotateQuaternion(q_orig, yaw):
     """
     Converts a basic rotation about the z-axis (in radians) into the
