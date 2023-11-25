@@ -13,6 +13,7 @@ message = None
 TOLERANCE = 0.2
 DISTANCE_TOLERANCE = 0.5
 told_about_finished = False
+scan_data = None
 
 OBSTACLE_DISTANCE_THRESHOLD = 0.2  # meters for obstacle detection
 TURNING_SPEED = 0.5  # Speed at which the robot turns for obstacle avoidance
@@ -22,7 +23,6 @@ ANGLE_RANGE = 30  # Angle range to consider for each direction (in degrees for o
 def pose_callback(msg):
     global message
     message = msg
-    print("pose")
 
 
 def move_to_goal_callback(msg):
@@ -30,6 +30,10 @@ def move_to_goal_callback(msg):
     COORD_TO_MOVE_TO = (msg.position.x, msg.position.y)
     told_about_finished = False
     print("got new goal")
+
+def scan_data_callback(msg):
+    global scan_data
+    scan_data = msg
 
 def find_clear_direction(scan_data):
     """
@@ -53,8 +57,8 @@ def find_clear_direction(scan_data):
     else:
         return 'right'
 
-def move(movement_pub, scan_data):
-    global message, told_about_finished
+def move():
+    global message, told_about_finished, scan_data
     if not message:
         print("no pose")
         return
@@ -70,7 +74,10 @@ def move(movement_pub, scan_data):
     # calculate the yaw to the target
     target_yaw = math.atan2(COORD_TO_MOVE_TO[1] - y, COORD_TO_MOVE_TO[0] - x)
 
-    clear_direction = find_clear_direction(scan_data)
+    if scan_data:
+        clear_direction = find_clear_direction(scan_data)
+    else:
+        clear_direction = 'front'
     twist = Twist()
 
     if distance < DISTANCE_TOLERANCE:
@@ -173,7 +180,7 @@ def main():
     print("2")
     rospy.Subscriber('/amcl_pose', PoseWithCovarianceStamped, pose_callback)
     rospy.Subscriber('/move_to_goal', Pose, move_to_goal_callback)
-    rospy.Subscriber('/scan', LaserScan, lambda scan_data: move(movement_pub, scan_data))
+    rospy.Subscriber('/base_scan', LaserScan, scan_data_callback)
     print("3")
 
 
@@ -186,11 +193,10 @@ def main():
     # rate = rospy.Rate(10)  # 10 Hz
     while not rospy.is_shutdown():
         if message and COORD_TO_MOVE_TO:
-            print("I am here")
-            scan_data = rospy.wait_for_message('/scan', LaserScan)
-            move(movement_pub, scan_data)
-        # rate.sleep()
+            move()
+        time.sleep(0.1)
 
+    print("out of while")
     rospy.spin()
     rospy.loginfo()
 def rotateQuaternion(q_orig, yaw):
