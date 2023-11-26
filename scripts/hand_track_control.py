@@ -230,19 +230,19 @@ def start_camera_and_read_hand():
                 else:
                     countdown = 3 - int(time.time() - gesture_start_time)
                     print(f"Hand = {total_fingers}, countdown: {countdown}", end=" ")
-                    # cv2.putText(img, str(countdown), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 5)
+                    cv2.putText(img, str(countdown), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 5)
                     if time.time() - gesture_start_time >= 3:
                         print(f"\nHand 1 Going to: {'table ' + str(total_fingers) if total_fingers != 0 else 'Till'}",
                               end=" ")
-                        # cv2.putText(img, "table " + str(total_fingers) if total_fingers != 0 else "Till", (45, 375),
-                        #             cv2.FONT_HERSHEY_PLAIN, 10, (255, 0, 0), 25)
+                        cv2.putText(img, "table " + str(total_fingers) if total_fingers != 0 else "Till", (45, 375),
+                                    cv2.FONT_HERSHEY_PLAIN, 10, (255, 0, 0), 25)
 
                         gesture_start_time = None
 
                         confirmation_start_time = time.time()
 
                         while time.time() - confirmation_start_time < 1:
-                            # cv2.imshow("Image", img)
+                            cv2.imshow("Image", img)
                             if cv2.waitKey(1) & 0xFF == ord('q'):
                                 break
 
@@ -260,10 +260,10 @@ def start_camera_and_read_hand():
                 print(f"Final Hand = {total_fingers}")
                 return total_fingers
 
-            # length, info, img = detector.findDistance(lm_list[8][0:2], lm_list[12][0:2], img, color=(255, 0, 255), scale=10)
+            length, info, img = detector.findDistance(lm_list[8][0:2], lm_list[12][0:2], img, color=(255, 0, 255), scale=10)
 
-        # if img is not None:
-        #     cv2.imshow("Image", img)
+        if img is not None:
+            cv2.imshow("Image", img)
         cv2.waitKey(1)
 
 
