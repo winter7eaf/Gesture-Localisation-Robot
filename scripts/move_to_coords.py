@@ -18,7 +18,7 @@ scan_data = None
 OBSTACLE_DISTANCE_THRESHOLD = 1.5  # meters for obstacle detection
 TURNING_SPEED = 0.5  # Speed at which the robot turns for obstacle avoidance
 FORWARD_SPEED = 0.6  # Forward movement speed towards the goal
-ANGLE_RANGE = 60  # Angle range to consider for each direction (in degrees for obstacle detection)
+ANGLE_RANGE = 80  # Angle range to consider for each direction (in degrees for obstacle detection)
 
 def pose_callback(msg):
     global message
@@ -102,7 +102,6 @@ def move():
         # If there's an obstacle, turn towards the clearest direction
         print(f"doing evasive action: {clear_direction}")
         twist.angular.z = TURNING_SPEED*2 if clear_direction == 'left' else -TURNING_SPEED
-        twist.linear.x = FORWARD_SPEED
     else:
         # If the path is clear, adjust heading towards the target
         angle_diff = target_yaw - yaw
