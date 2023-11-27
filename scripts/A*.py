@@ -15,10 +15,10 @@ DISTANCE_TOLERANCE = 0.5
 told_about_finished = False
 scan_data = None
 
-OBSTACLE_DISTANCE_THRESHOLD = 1.5  # meters for obstacle detection
+OBSTACLE_DISTANCE_THRESHOLD = 1.0  # meters for obstacle detection
 TURNING_SPEED = 0.5  # Speed at which the robot turns for obstacle avoidance
 FORWARD_SPEED = 0.6  # Forward movement speed towards the goal
-ANGLE_RANGE = 60  # Angle range to consider for each direction (in degrees for obstacle detection)
+ANGLE_RANGE = 30  # Angle range to consider for each direction (in degrees for obstacle detection)
 
 def pose_callback(msg):
     global message
@@ -41,30 +41,94 @@ def find_clear_direction(scan_data):
     """
     # print(scan_data)
     num_ranges = len(scan_data.ranges)
-    # print(num_ranges)
+    print(num_ranges)
     segment_size = int(ANGLE_RANGE / 360 * num_ranges)
-    # print((segment_size))
+    print((segment_size))
 
-    right_segment = scan_data.ranges[:segment_size]
-    left_segment = scan_data.ranges[-segment_size:]
+    left_segment = scan_data.ranges[:segment_size]
+    right_segment = scan_data.ranges[-segment_size:]
     front_segment = scan_data.ranges[num_ranges//2 - segment_size//2:num_ranges//2 + segment_size//2]
-    # print(left_segment)
-    # print(right_segment)
-    # print(front_segment)
+    print(left_segment)
+    print(right_segment)
+    print(front_segment)
 
-    avg_distance_left = sum(left_segment) / len(left_segment)
-    avg_distance_right = sum(right_segment) / len(right_segment)
-    avg_distance_front = sum(front_segment) / len(front_segment)
+    min_distance_left = min(left_segment)
+    min_distance_right = min(right_segment)
+    min_distance_front = min(front_segment)
+    print(min_distance_left)
+    print(min_distance_right)
+    print(min_distance_front)
 
-    print("left", avg_distance_left, "front", avg_distance_front, "right", avg_distance_right)
-
-    # Decision logic based on average distances
-    if avg_distance_front > OBSTACLE_DISTANCE_THRESHOLD:
+    if min_distance_front > OBSTACLE_DISTANCE_THRESHOLD:
+        print("going front")
         return 'front'
-    elif avg_distance_left > avg_distance_right:
+    elif min_distance_left < min_distance_right:
+        print("going left")
         return 'left'
     else:
+        print("going right")
         return 'right'
+
+
+import numpy as np
+import heapq
+
+
+def heuristic(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])  # Manhattan distance
+
+
+def a_star_search(grid, start, goal):
+    neighbors = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # 4-directional movement
+    close_set = set()
+    came_from = {}
+    gscore = {start: 0}
+    fscore = {start: heuristic(start, goal)}
+    open_set = []
+
+    heapq.heappush(open_set, (fscore[start], start))
+
+    while open_set:
+        current = heapq.heappop(open_set)[1]
+
+        if current == goal:
+            path = []
+            while current in came_from:
+                path.append(current)
+                current = came_from[current]
+            return path[::-1]  # Reverse path
+
+        close_set.add(current)
+        for i, j in neighbors:
+            neighbor = current[0] + i, current[1] + j
+            tentative_g_score = gscore[current] + heuristic(current, neighbor)
+            if 0 <= neighbor[0] < len(grid) and 0 <= neighbor[1] < len(grid[0]) and grid[neighbor[0]][neighbor[1]] == 0:
+                if neighbor in close_set and tentative_g_score >= gscore.get(neighbor, 0):
+                    continue
+
+                if tentative_g_score < gscore.get(neighbor, 0) or neighbor not in [i[1] for i in open_set]:
+                    came_from[neighbor] = current
+                    gscore[neighbor] = tentative_g_score
+                    fscore[neighbor] = tentative_g_score + heuristic(neighbor, goal)
+                    heapq.heappush(open_set, (fscore[neighbor], neighbor))
+
+    return False
+
+# ... [Your existing imports and global variables]
+
+def update_grid_based_on_sensor_data():
+    # Update your grid map based on sensor data
+    # This is an example, implement according to your robot's sensor data
+    grid = np.zeros((100, 100))  # Example grid
+    # Update grid with obstacles (set cells to 1 where obstacles are detected)
+    return grid
+
+def convert_path_to_movement_commands(path):
+    # Convert the A* path to robot movement commands
+    for point in path:
+        # Convert grid point to real-world coordinates
+        # Send movement command to the robot
+        pass
 
 def move():
     global message, told_about_finished, scan_data
@@ -125,9 +189,21 @@ def main():
     rospy.Subscriber('/move_to_goal', Pose, move_to_goal_callback)
     rospy.Subscriber('/base_scan', LaserScan, scan_data_callback)
 
+    # while not rospy.is_shutdown():
+    #     if message and COORD_TO_MOVE_TO:
+    #         move()
+    #     time.sleep(0.1)
+    #
+    # rospy.spin()
+
     while not rospy.is_shutdown():
-        if message and COORD_TO_MOVE_TO:
-            move()
+        grid = update_grid_based_on_sensor_data()
+        start = (0, 0)  # Starting point in grid coordinates
+        goal = (99, 99)  # Goal point in grid coordinates
+        path = a_star_search(grid, start, goal)
+        if path:
+            convert_path_to_movement_commands(path)
+        # ... [Rest of your loop]
         time.sleep(0.1)
 
     rospy.spin()
