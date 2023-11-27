@@ -4,7 +4,7 @@ from geometry_msgs.msg import Twist, PoseWithCovarianceStamped
 import math
 import time
 from geometry_msgs.msg import Quaternion, Pose
-from sensor_msgs.msg import LaserScan
+from sensor_msgs.msg import LaserScan, Range
 from std_msgs.msg import String
 
 
@@ -15,10 +15,22 @@ DISTANCE_TOLERANCE = 0.5
 told_about_finished = False
 scan_data = None
 
-OBSTACLE_DISTANCE_THRESHOLD = 1.5  # meters for obstacle detection
-TURNING_SPEED = 0.5  # Speed at which the robot turns for obstacle avoidance
-FORWARD_SPEED = 0.6  # Forward movement speed towards the goal
-ANGLE_RANGE = 80  # Angle range to consider for each direction (in degrees for obstacle detection)
+OBSTACLE_DISTANCE_THRESHOLD = 0.5  # meters for obstacle detection
+TURNING_SPEED = 1.0  # Speed at which the robot turns for obstacle avoidance
+FORWARD_SPEED = 1.0  # Forward movement speed towards the goal
+ANGLE_RANGE = 30  # Angle range to consider for each direction (in degrees for obstacle detection)
+
+def front_sensor_callback(range_msg):
+    if range_msg.range < 0.15:
+        rospy.logwarn("Collision risk [FRONT]: robot is {:.2f} meters away from obstacle.".format(range_msg.range))
+
+def right_sensor_callback(range_msg):
+    if range_msg.range < 0.15:
+        rospy.logwarn("Collision risk [RIGHT]: robot is {:.2f} meters away from obstacle.".format(range_msg.range))
+
+def left_sensor_callback(range_msg):
+    if range_msg.range < 0.15:
+        rospy.logwarn("Collision risk [LEFT]: robot is {:.2f} meters away from obstacle.".format(range_msg.range))
 
 def pose_callback(msg):
     global message
@@ -98,14 +110,23 @@ def move():
             told_about_finished = True
         return
 
+    # angle_difference = target_yaw - yaw
+    #
+    # if abs(angle_difference) < 5:
+    #     twist.angular.z = 0  # Stop turning
+    # else:
+    #     twist.angular.z = TURNING_SPEED if angle_difference > 0 else -TURNING_SPEED
+
     if clear_direction != 'front':
         # If there's an obstacle, turn towards the clearest direction
         print(f"doing evasive action: {clear_direction}")
         twist.angular.z = TURNING_SPEED*2 if clear_direction == 'left' else -TURNING_SPEED
     else:
         # If the path is clear, adjust heading towards the target
+        print("path is clear")
         angle_diff = target_yaw - yaw
         if abs(angle_diff) > TOLERANCE:
+            print("turning")
             twist.angular.z = TURNING_SPEED if angle_diff > 0 else -TURNING_SPEED
         else:
             # Move forward if facing the target
@@ -116,6 +137,16 @@ def move():
 
 
 def main():
+    # try:
+    #     # Initialize the ROS Node
+    #     rospy.init_node('sensor_monitor', anonymous=True)
+    #
+    #     # Subscribe to the relevant sensor topics
+    #     rospy.Subscriber("/front_sensor_topic", Range, front_sensor_callback)
+    #     rospy.Subscriber("/right_sensor_topic", Range, right_sensor_callback)
+    #     rospy.Subscriber("/left_sensor_topic", Range, left_sensor_callback)
+    # except rospy.ROSInterruptException:
+    #     pass
     rospy.init_node('move_to_coords')
     global movement_pub, move_to_coords_pub
     movement_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=100)
