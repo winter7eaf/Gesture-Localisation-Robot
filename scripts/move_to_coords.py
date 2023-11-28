@@ -50,7 +50,7 @@ def scan_data_callback(msg):
 def find_clear_direction_v2(scan_data):
     NUM_RANGES = len(scan_data.ranges)
     # get the middle 30 degrees of the scan data
-    segment_size = int(30 / 180 * NUM_RANGES)
+    segment_size = int(30 / 360 * NUM_RANGES)
     print(segment_size)
     front_segment = scan_data.ranges[NUM_RANGES//2 - segment_size//2:NUM_RANGES//2 + segment_size//2]
     # get the 30 degree to the left of the front segment
