@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+
+'''
+#https://github.com/florian-s-code/robotcraft_maze_solver/tree/master/src
+Take a look on this github, I thought it might be the same logit as this. solving maze is basically going forward
+while avoiding obstacles like walls so......
+
+I have modified the code a bit, tho not tested yet.
+'''
+
 import rospy
 from geometry_msgs.msg import Twist, PoseWithCovarianceStamped, Quaternion, Pose
 import math
