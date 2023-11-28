@@ -51,13 +51,11 @@ def find_clear_direction_v2(scan_data):
     NUM_RANGES = len(scan_data.ranges)
     # get the middle 30 degrees of the scan data
     segment_size = int(30 / 360 * NUM_RANGES)
-    print(segment_size)
     front_segment = scan_data.ranges[NUM_RANGES//2 - segment_size//2:NUM_RANGES//2 + segment_size//2]
     # get the 30 degree to the left of the front segment
     left_segment = scan_data.ranges[NUM_RANGES//2 - segment_size//2 - segment_size:NUM_RANGES//2 - segment_size//2]
     # get the 30 degree to the right of the front segment
     right_segment = scan_data.ranges[NUM_RANGES//2 + segment_size//2:NUM_RANGES//2 + segment_size//2 + segment_size]
-    print(len(front_segment), len(left_segment), len(right_segment))
 
     # get the average distance of each segment
     avg_distance_front = sum(front_segment) / len(front_segment)
@@ -140,10 +138,8 @@ def move():
         twist.angular.z = TURNING_SPEED*2 if clear_direction == 'left' else -TURNING_SPEED
     else:
         # If the path is clear, adjust heading towards the target
-        print("path is clear")
         angle_diff = target_yaw - yaw
         if abs(angle_diff) > TOLERANCE:
-            print("turning")
             twist.angular.z = TURNING_SPEED if angle_diff > 0 else -TURNING_SPEED
         else:
             # Move forward if facing the target

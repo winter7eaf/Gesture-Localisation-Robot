@@ -13,7 +13,7 @@ goals = [
          orientation=Quaternion(w=0.8337602955527833, x=0.0, y=0.0, z=0.5521265883470342)),
     Pose(position=Point(x=1.9327985587137941, y=11.423447682767932, z=0.0),
          orientation=Quaternion(w=0.9201964048699748, x=0.0, y=0.0, z=0.39145699184504723)),
-    Pose(position=Point(x=15.11636640422266, y=10.425471330763873, z=0.0),
+    Pose(position=Point(x=15.11636640422266, y=13.425471330763873, z=0.0),
          orientation=Quaternion(w=0.997910297702185, x=0.0, y=0.0, z=0.06461453195633741)),
     Pose(position=Point(x=12.905579134804732, y=7.9848322620675525, z=0.0),
          orientation=Quaternion(w=0.980740448390913, x=0.0, y=0.0, z=-0.19531557257420862)),
