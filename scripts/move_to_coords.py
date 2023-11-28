@@ -10,7 +10,7 @@ from std_msgs.msg import String
 
 COORD_TO_MOVE_TO = None
 message = None
-TOLERANCE = 0.2
+TOLERANCE = 0.3
 DISTANCE_TOLERANCE = 0.5
 told_about_finished = False
 scan_data = None

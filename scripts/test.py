@@ -43,7 +43,30 @@ def left_sensor_callback(range_msg):
     global left_distance
     left_distance = range_msg.range
 
+def left_front_right_distance(scan_data):
+    """
+    Analyzes the LIDAR scan data to find the clearest direction.
+    """
+    # print(scan_data)
+    num_ranges = len(scan_data.ranges)
+    # print(num_ranges)
+    segment_size = int(30 / 360 * num_ranges)
+    # print((segment_size))
 
+    right_segment = scan_data.ranges[:segment_size]
+    left_segment = scan_data.ranges[-segment_size:]
+    front_segment = scan_data.ranges[num_ranges//2 - segment_size//2:num_ranges//2 + segment_size//2]
+    # print(left_segment)
+    # print(right_segment)
+    # print(front_segment)
+
+    avg_distance_left = sum(left_segment) / len(left_segment)
+    avg_distance_right = sum(right_segment) / len(right_segment)
+    avg_distance_front = sum(front_segment) / len(front_segment)
+
+    print("left", avg_distance_left, "front", avg_distance_front, "right", avg_distance_right)
+
+    return avg_distance_left, avg_distance_right, avg_distance_front
 def odom_callback(odom_msg):
     global x, y, theta
     x = odom_msg.pose.pose.position.x
