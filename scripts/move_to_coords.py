@@ -52,7 +52,7 @@ def find_clear_direction(scan_data):
     Analyzes the LIDAR scan data to find the clearest direction.
     """
     # print(scan_data)
-    num_ranges = len(scan_data.ranges)
+    num_ranges = len(scan_data.ranges) # should always be 500
     # print(num_ranges)
     segment_size = int(ANGLE_RANGE / 360 * num_ranges)
     # print((segment_size))
@@ -81,11 +81,10 @@ def find_clear_direction(scan_data):
 def move():
     global message, told_about_finished, scan_data
     if not message:
-        print("no pose")
         return
     if not COORD_TO_MOVE_TO:
-        print("no coords")
         return
+
     # coords
     x, y = message.pose.pose.position.x, message.pose.pose.position.y
     yaw = getHeading(message.pose.pose.orientation)
@@ -109,13 +108,6 @@ def move():
             move_to_coords_pub.publish(string_data)
             told_about_finished = True
         return
-
-    # angle_difference = target_yaw - yaw
-    #
-    # if abs(angle_difference) < 5:
-    #     twist.angular.z = 0  # Stop turning
-    # else:
-    #     twist.angular.z = TURNING_SPEED if angle_difference > 0 else -TURNING_SPEED
 
     if clear_direction != 'front':
         # If there's an obstacle, turn towards the clearest direction
@@ -156,8 +148,7 @@ def main():
     rospy.Subscriber('/base_scan', LaserScan, scan_data_callback)
 
     while not rospy.is_shutdown():
-        if message and COORD_TO_MOVE_TO:
-            move()
+        move()
         time.sleep(0.1)
 
     rospy.spin()
