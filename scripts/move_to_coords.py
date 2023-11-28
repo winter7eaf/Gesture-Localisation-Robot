@@ -47,6 +47,30 @@ def scan_data_callback(msg):
     global scan_data
     scan_data = msg
 
+def find_clear_direction_v2(scan_data):
+    NUM_RANGES = 500
+    ENTIRE_ANGLE = 180
+    # get the middle 30 degrees of the scan data
+    segment_size = int(ENTIRE_ANGLE / 360 * NUM_RANGES)
+    front_segment = scan_data.ranges[NUM_RANGES//2 - segment_size//2:NUM_RANGES//2 + segment_size//2]
+    # get the 30 degree to the left of the front segment
+    left_segment = scan_data.ranges[NUM_RANGES//2 - segment_size//2 - segment_size:NUM_RANGES//2 - segment_size//2]
+    # get the 30 degree to the right of the front segment
+    right_segment = scan_data.ranges[NUM_RANGES//2 + segment_size//2:NUM_RANGES//2 + segment_size//2 + segment_size]
+
+    # get the average distance of each segment
+    avg_distance_front = sum(front_segment) / len(front_segment)
+    avg_distance_left = sum(left_segment) / len(left_segment)
+    avg_distance_right = sum(right_segment) / len(right_segment)
+
+    # if the front is clear, return front
+    if avg_distance_front > OBSTACLE_DISTANCE_THRESHOLD:
+        return 'front'
+    elif avg_distance_left > avg_distance_right:
+        return 'left'
+    else:
+        return 'right'
+
 def find_clear_direction(scan_data):
     """
     Analyzes the LIDAR scan data to find the clearest direction.
@@ -95,7 +119,7 @@ def move():
     target_yaw = math.atan2(COORD_TO_MOVE_TO[1] - y, COORD_TO_MOVE_TO[0] - x)
 
     if scan_data:
-        clear_direction = find_clear_direction(scan_data)
+        clear_direction = find_clear_direction_v2(scan_data)
     else:
         print("no scan data")
         clear_direction = 'front'
