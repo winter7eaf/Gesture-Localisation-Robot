@@ -63,12 +63,13 @@ def find_clear_direction_v2(scan_data):
     avg_distance_right = sum(right_segment) / len(right_segment)
 
     # if the front is clear, return front
-    if avg_distance_front > OBSTACLE_DISTANCE_THRESHOLD:
-        return 'front'
-    elif avg_distance_left > avg_distance_right:
-        return 'left'
+    if min(avg_distance_front, avg_distance_left, avg_distance_right) < OBSTACLE_DISTANCE_THRESHOLD:
+        if avg_distance_left > avg_distance_right:
+            return 'left'
+        else:
+            return 'right'
     else:
-        return 'right'
+        return 'front'
 
 def find_clear_direction(scan_data):
     """
@@ -135,7 +136,12 @@ def move():
     if clear_direction != 'front':
         # If there's an obstacle, turn towards the clearest direction
         print(f"doing evasive action: {clear_direction}")
-        twist.angular.z = TURNING_SPEED*2 if clear_direction == 'left' else -TURNING_SPEED
+        if clear_direction == 'left':
+            twist.angular.z = TURNING_SPEED*2
+            twist.linear.x = FORWARD_SPEED
+        elif clear_direction == 'right':
+            twist.angular.z = -TURNING_SPEED*2
+            twist.linear.x = FORWARD_SPEED
     else:
         # If the path is clear, adjust heading towards the target
         angle_diff = target_yaw - yaw
