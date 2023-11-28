@@ -48,33 +48,27 @@ def scan_data_callback(msg):
     scan_data = msg
 
 def find_clear_direction_v2(scan_data):
-    NUM_RANGES = len(scan_data.ranges)
-    ANGLE_RANGE = 40
-    # get the middle angle range degrees of the scan data
-    segment_size = int(ANGLE_RANGE / 360 * NUM_RANGES)
-    front_segment = scan_data.ranges[NUM_RANGES//2 - segment_size//2:NUM_RANGES//2 + segment_size//2]
-    # get the 30 degree to the left of the front segment
-    left_segment = scan_data.ranges[NUM_RANGES//2 - segment_size//2 - segment_size:NUM_RANGES//2 - segment_size//2]
-    # get the 30 degree to the right of the front segment
-    right_segment = scan_data.ranges[NUM_RANGES//2 + segment_size//2:NUM_RANGES//2 + segment_size//2 + segment_size]
+    # get the distance of in front of the robot
+    distance_front = scan_data.ranges[len(scan_data.ranges) // 2]
+    # get the distance of the 30 degrees to the left of the robot
+    distance_right = scan_data.ranges[len(scan_data.ranges) // 3]
+    # get the distance of the 30 degrees to the right of the robot
+    distance_left = scan_data.ranges[len(scan_data.ranges) // 3 * 2]
 
-    # get the average distance of each segment
-    avg_distance_front = sum(front_segment) / len(front_segment)
-    avg_distance_left = sum(left_segment) / len(left_segment)
-    avg_distance_right = sum(right_segment) / len(right_segment)
+    distance = min(distance_front, distance_left, distance_right)
 
-    # if the front is clear, return front
-    if min(avg_distance_front, avg_distance_left, avg_distance_right) < OBSTACLE_DISTANCE_THRESHOLD:
-        # print(left_segment)
-        # print(front_segment)
-        # print(right_segment)
-        print(avg_distance_left, avg_distance_front, avg_distance_right)
-        if avg_distance_left > avg_distance_right:
-            return 'left'
-        else:
-            return 'right'
-    else:
+    if distance > OBSTACLE_DISTANCE_THRESHOLD:
         return 'front'
+
+    # check average distance of each side
+    num_ranges = len(scan_data.ranges)
+    avg_distance_right = sum(scan_data.ranges[:num_ranges//2]) / (num_ranges//2)
+    avg_distance_left = sum(scan_data.ranges[num_ranges//2:]) / (num_ranges//2)
+    print("left", avg_distance_left, "right", avg_distance_right)
+    if avg_distance_left > avg_distance_right:
+        return 'left'
+    else:
+        return 'right'
 
 def find_clear_direction(scan_data):
     """
@@ -143,10 +137,10 @@ def move():
         print(f"doing evasive action: {clear_direction}")
         if clear_direction == 'left':
             twist.angular.z = TURNING_SPEED*3
-            twist.linear.x = -FORWARD_SPEED*2
+            twist.linear.x = FORWARD_SPEED
         elif clear_direction == 'right':
             twist.angular.z = -TURNING_SPEED*3
-            twist.linear.x = -FORWARD_SPEED*2
+            twist.linear.x = FORWARD_SPEED
     else:
         # If the path is clear, adjust heading towards the target
         angle_diff = target_yaw - yaw
