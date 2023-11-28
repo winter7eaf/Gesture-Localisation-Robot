@@ -15,7 +15,7 @@ DISTANCE_TOLERANCE = 0.5
 told_about_finished = False
 scan_data = None
 
-OBSTACLE_DISTANCE_THRESHOLD = 0.5  # meters for obstacle detection
+OBSTACLE_DISTANCE_THRESHOLD = 1  # meters for obstacle detection
 TURNING_SPEED = 1.0  # Speed at which the robot turns for obstacle avoidance
 FORWARD_SPEED = 1.0  # Forward movement speed towards the goal
 ANGLE_RANGE = 30  # Angle range to consider for each direction (in degrees for obstacle detection)
@@ -49,8 +49,9 @@ def scan_data_callback(msg):
 
 def find_clear_direction_v2(scan_data):
     NUM_RANGES = len(scan_data.ranges)
-    # get the middle 30 degrees of the scan data
-    segment_size = int(30 / 360 * NUM_RANGES)
+    ANGLE_RANGE = 40
+    # get the middle angle range degrees of the scan data
+    segment_size = int(ANGLE_RANGE / 360 * NUM_RANGES)
     front_segment = scan_data.ranges[NUM_RANGES//2 - segment_size//2:NUM_RANGES//2 + segment_size//2]
     # get the 30 degree to the left of the front segment
     left_segment = scan_data.ranges[NUM_RANGES//2 - segment_size//2 - segment_size:NUM_RANGES//2 - segment_size//2]
@@ -64,6 +65,9 @@ def find_clear_direction_v2(scan_data):
 
     # if the front is clear, return front
     if min(avg_distance_front, avg_distance_left, avg_distance_right) < OBSTACLE_DISTANCE_THRESHOLD:
+        # print(left_segment)
+        # print(front_segment)
+        # print(right_segment)
         print(avg_distance_left, avg_distance_front, avg_distance_right)
         if avg_distance_left > avg_distance_right:
             return 'left'
@@ -138,11 +142,11 @@ def move():
         # If there's an obstacle, turn towards the clearest direction
         print(f"doing evasive action: {clear_direction}")
         if clear_direction == 'left':
-            twist.angular.z = TURNING_SPEED*2
-            twist.linear.x = FORWARD_SPEED
+            twist.angular.z = TURNING_SPEED*3
+            twist.linear.x = -FORWARD_SPEED*2
         elif clear_direction == 'right':
-            twist.angular.z = -TURNING_SPEED*2
-            twist.linear.x = FORWARD_SPEED
+            twist.angular.z = -TURNING_SPEED*3
+            twist.linear.x = -FORWARD_SPEED*2
     else:
         # If the path is clear, adjust heading towards the target
         angle_diff = target_yaw - yaw
