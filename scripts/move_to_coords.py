@@ -64,6 +64,7 @@ def find_clear_direction_v2(scan_data):
 
     # if the front is clear, return front
     if min(avg_distance_front, avg_distance_left, avg_distance_right) < OBSTACLE_DISTANCE_THRESHOLD:
+        print(avg_distance_left, avg_distance_front, avg_distance_right)
         if avg_distance_left > avg_distance_right:
             return 'left'
         else:
