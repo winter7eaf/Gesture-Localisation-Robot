@@ -9,7 +9,7 @@ from std_msgs.msg import String
 
 
 COORD_TO_MOVE_TO = None
-message = None
+pose_message = None
 TOLERANCE = 0.3
 DISTANCE_TOLERANCE = 0.5
 told_about_finished = False
@@ -33,8 +33,8 @@ def left_sensor_callback(range_msg):
         rospy.logwarn("Collision risk [LEFT]: robot is {:.2f} meters away from obstacle.".format(range_msg.range))
 
 def pose_callback(msg):
-    global message
-    message = msg
+    global pose_message
+    pose_message = msg
 
 
 def move_to_goal_callback(msg):
@@ -102,15 +102,15 @@ def find_clear_direction(scan_data):
         return 'right'
 
 def move():
-    global message, told_about_finished, scan_data
-    if not message:
+    global pose_message, told_about_finished, scan_data
+    if not pose_message:
         return
     if not COORD_TO_MOVE_TO:
         return
 
     # coords
-    x, y = message.pose.pose.position.x, message.pose.pose.position.y
-    yaw = getHeading(message.pose.pose.orientation)
+    x, y = pose_message.pose.pose.position.x, pose_message.pose.pose.position.y
+    yaw = getHeading(pose_message.pose.pose.orientation)
 
     # calculate the distance to the target
     distance = math.sqrt((COORD_TO_MOVE_TO[0] - x) ** 2 + (COORD_TO_MOVE_TO[1] - y) ** 2)

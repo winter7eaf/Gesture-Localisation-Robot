@@ -9,7 +9,7 @@ from std_msgs.msg import String
 
 
 COORD_TO_MOVE_TO = None
-message = None
+pose_message = None
 TOLERANCE = 0.2
 DISTANCE_TOLERANCE = 0.5
 told_about_finished = False
@@ -21,7 +21,7 @@ FORWARD_SPEED = 0.6  # Forward movement speed towards the goal
 ANGLE_RANGE = 30  # Angle range to consider for each direction (in degrees for obstacle detection)
 
 def pose_callback(msg):
-    global message
+    global pose_message
     message = msg
 
 
@@ -131,7 +131,7 @@ def convert_path_to_movement_commands(path):
         pass
 
 def move():
-    global message, told_about_finished, scan_data
+    global pose_message, told_about_finished, scan_data
     if not message:
         print("no pose")
         return

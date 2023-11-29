@@ -288,11 +288,11 @@ goals = [
          orientation=Quaternion(w=0.9440032004771164, x=0.0, y=0.0, z=-0.3299362930763473)),
 ]
 
-Table_4 = [goals[1], goals[2], goals[7]]
-Table_5 = [goals[1], goals[2], goals[8]]
-Table_3 = [goals[1], goals[6]]
-Table_2 = [goals[1], goals[2], goals[3], goals[5]]
-Table_1 = [goals[1], goals[2], goals[3], goals[4]]
+Table_4 = [goals[0], goals[1], goals[2], goals[7]]
+Table_5 = [goals[0], goals[1], goals[2], goals[8]]
+Table_3 = [goals[0], goals[1], goals[6]]
+Table_2 = [goals[0], goals[1], goals[2], goals[3], goals[5]]
+Table_1 = [goals[0], goals[1], goals[2], goals[3], goals[4]]
 
 target_path = None # will be set to one of the above tables
 
@@ -323,7 +323,7 @@ def main():
     rospy.Subscriber('/move_to_coords', String, from_move_to_coords_callback)
 
     while True:
-        answer = input("Destination: ")
+        answer = start_camera_and_read_hand()
         if answer == '1':
             target_path = Table_1
             will_be_at_home = False
