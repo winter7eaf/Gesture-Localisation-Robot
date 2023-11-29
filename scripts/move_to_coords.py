@@ -144,6 +144,10 @@ def move():
     else:
         # If the path is clear, adjust heading towards the target
         angle_diff = target_yaw - yaw
+        if angle_diff > math.pi:
+            angle_diff -= 2 * math.pi
+        elif angle_diff < -math.pi:
+            angle_diff += 2 * math.pi
         if abs(angle_diff) > TOLERANCE:
             twist.angular.z = TURNING_SPEED if angle_diff > 0 else -TURNING_SPEED
         else:
