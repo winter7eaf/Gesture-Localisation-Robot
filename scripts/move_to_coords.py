@@ -20,17 +20,6 @@ TURNING_SPEED = 1.0  # Speed at which the robot turns for obstacle avoidance
 FORWARD_SPEED = 1.0  # Forward movement speed towards the goal
 ANGLE_RANGE = 30  # Angle range to consider for each direction (in degrees for obstacle detection)
 
-def front_sensor_callback(range_msg):
-    if range_msg.range < 0.15:
-        rospy.logwarn("Collision risk [FRONT]: robot is {:.2f} meters away from obstacle.".format(range_msg.range))
-
-def right_sensor_callback(range_msg):
-    if range_msg.range < 0.15:
-        rospy.logwarn("Collision risk [RIGHT]: robot is {:.2f} meters away from obstacle.".format(range_msg.range))
-
-def left_sensor_callback(range_msg):
-    if range_msg.range < 0.15:
-        rospy.logwarn("Collision risk [LEFT]: robot is {:.2f} meters away from obstacle.".format(range_msg.range))
 
 def pose_callback(msg):
     global pose_message
@@ -64,39 +53,7 @@ def find_clear_direction_v2(scan_data):
     num_ranges = len(scan_data.ranges)
     avg_distance_right = sum(scan_data.ranges[:num_ranges//2]) / (num_ranges//2)
     avg_distance_left = sum(scan_data.ranges[num_ranges//2:]) / (num_ranges//2)
-    print("left", avg_distance_left, "right", avg_distance_right)
     if avg_distance_left > avg_distance_right:
-        return 'left'
-    else:
-        return 'right'
-
-def find_clear_direction(scan_data):
-    """
-    Analyzes the LIDAR scan data to find the clearest direction.
-    """
-    # print(scan_data)
-    num_ranges = len(scan_data.ranges) # should always be 500
-    # print(num_ranges)
-    segment_size = int(ANGLE_RANGE / 360 * num_ranges)
-    # print((segment_size))
-
-    right_segment = scan_data.ranges[:segment_size]
-    left_segment = scan_data.ranges[-segment_size:]
-    front_segment = scan_data.ranges[num_ranges//2 - segment_size//2:num_ranges//2 + segment_size//2]
-    # print(left_segment)
-    # print(right_segment)
-    # print(front_segment)
-
-    avg_distance_left = sum(left_segment) / len(left_segment)
-    avg_distance_right = sum(right_segment) / len(right_segment)
-    avg_distance_front = sum(front_segment) / len(front_segment)
-
-    print("left", avg_distance_left, "front", avg_distance_front, "right", avg_distance_right)
-
-    # Decision logic based on average distances
-    if avg_distance_front > OBSTACLE_DISTANCE_THRESHOLD:
-        return 'front'
-    elif avg_distance_left > avg_distance_right:
         return 'left'
     else:
         return 'right'
@@ -159,16 +116,6 @@ def move():
 
 
 def main():
-    # try:
-    #     # Initialize the ROS Node
-    #     rospy.init_node('sensor_monitor', anonymous=True)
-    #
-    #     # Subscribe to the relevant sensor topics
-    #     rospy.Subscriber("/front_sensor_topic", Range, front_sensor_callback)
-    #     rospy.Subscriber("/right_sensor_topic", Range, right_sensor_callback)
-    #     rospy.Subscriber("/left_sensor_topic", Range, left_sensor_callback)
-    # except rospy.ROSInterruptException:
-    #     pass
     rospy.init_node('move_to_coords')
     global movement_pub, move_to_coords_pub
     movement_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=100)
@@ -179,9 +126,11 @@ def main():
 
     while not rospy.is_shutdown():
         move()
-        time.sleep(0.1)
+        time.sleep(0.2)
 
     rospy.spin()
+
+
 def rotateQuaternion(q_orig, yaw):
     """
     Converts a basic rotation about the z-axis (in radians) into the
