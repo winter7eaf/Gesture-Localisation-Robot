@@ -40,36 +40,63 @@ This should start Stage Ros and Rviz with our cafe map.
 approximate location and direction in which your robot is facing in Stage. 
 4. In another terminal, run `rosrun Gesture-Localisation-Robot hand_track_control.py`. Camera will show up. Make sure camera are accessible.
 
+This will allow you to input hand gesture from 0 to 5. 0 is corresponding the tail, and 1 to 5 to Tables respectfully. Hold you hand still about 3 seconds, and the robot should start heading to the ordered table number.
 
-Joint recog.:<br />
+[//]: # (## Alternative testing with Move_base library)
 
+[//]: # ()
+[//]: # (This is testing with Path_finding library `move_base`)
 
-https://developers.google.com/mediapipe/solutions/vision/gesture_recognizer/python#live-stream
+[//]: # (Joint recog.:<br />)
 
-IMPORTANT IMPORTS:<br />
-import cv2 <br />
-import tensorflow as tf  # or import torch
+[//]: # ()
+[//]: # ()
+[//]: # (https://developers.google.com/mediapipe/solutions/vision/gesture_recognizer/python#live-stream)
 
-https://github.com/ahmetgunduz/Real-time-GesRec
-https://github.com/MahmudulAlam/Unified-Gesture-and-Fingertip-Detection
-https://github.com/ErickWendel/live-recognizing-multiple-gestures-tensorflowjs <br />
+[//]: # ()
+[//]: # (IMPORTANT IMPORTS:<br />)
 
+[//]: # (import cv2 <br />)
 
-https://github.com/kinivi/hand-gesture-recognition-mediapipe
+[//]: # (import tensorflow as tf  # or import torch)
 
-### Nav Stack with Stage. 
-Git clone the following link to your `<catkin_ws>/src` <br />
-https://github.com/ros-planning/navigation_tutorial  <br />
-Then run the following. Use 2D goal arrow to set the goal.
-```commandline
-roscore
+[//]: # ()
+[//]: # (https://github.com/ahmetgunduz/Real-time-GesRec)
 
-//change in to new terminal
+[//]: # (https://github.com/MahmudulAlam/Unified-Gesture-and-Fingertip-Detection)
 
-roslaunch navigation_stage move_base_amcl_2.5cm.launch
-```
-Change the last part respectively 
+[//]: # (https://github.com/ErickWendel/live-recognizing-multiple-gestures-tensorflowjs <br />)
 
-Install:
-mediapipe
-opencv
+[//]: # ()
+[//]: # ()
+[//]: # (https://github.com/kinivi/hand-gesture-recognition-mediapipe)
+
+[//]: # ()
+[//]: # (### Nav Stack with Stage. )
+
+[//]: # (Git clone the following link to your `<catkin_ws>/src` <br />)
+
+[//]: # (https://github.com/ros-planning/navigation_tutorial  <br />)
+
+[//]: # (Then run the following. Use 2D goal arrow to set the goal.)
+
+[//]: # (```commandline)
+
+[//]: # (roscore)
+
+[//]: # ()
+[//]: # (//change in to new terminal)
+
+[//]: # ()
+[//]: # (roslaunch navigation_stage move_base_amcl_2.5cm.launch)
+
+[//]: # (```)
+
+[//]: # (Change the last part respectively )
+
+[//]: # ()
+[//]: # (Install:)
+
+[//]: # (mediapipe)
+
+[//]: # (opencv)
