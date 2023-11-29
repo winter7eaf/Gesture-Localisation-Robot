@@ -42,6 +42,14 @@ approximate location and direction in which your robot is facing in Stage.
 
 This will allow you to input hand gesture from 0 to 5. 0 is corresponding the tail, and 1 to 5 to Tables respectfully. Hold you hand still about 3 seconds, and the robot should start heading to the ordered table number.
 
+## Contributor
+
+Chit Lee<br />
+Juni Katsu<br />
+Cheuk Yu Lam<br />
+Abbas Mandasorwala<br />
+Kozerenko Elizaveta<br />
+
 [//]: # (## Alternative testing with Move_base library)
 
 [//]: # ()
