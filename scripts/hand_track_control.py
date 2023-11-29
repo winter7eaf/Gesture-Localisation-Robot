@@ -323,7 +323,7 @@ def main():
     rospy.Subscriber('/move_to_coords', String, from_move_to_coords_callback)
 
     while True:
-        answer = start_camera_and_read_hand()
+        answer = str(start_camera_and_read_hand())
         if answer == '1':
             target_path = Table_1
             will_be_at_home = False
