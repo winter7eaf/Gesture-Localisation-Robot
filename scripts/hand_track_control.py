@@ -294,11 +294,7 @@ Table_3 = [goals[1], goals[6]]
 Table_2 = [goals[1], goals[2], goals[3], goals[5]]
 Table_1 = [goals[1], goals[2], goals[3], goals[4]]
 
-One = False
-Two = False
-Three = False
-Four = False
-Five = False
+target_path = None # will be set to one of the above tables
 
 
 def send_goal(pose):
@@ -318,96 +314,49 @@ def from_move_to_coords_callback(msg):
         arrived_yet = True
         print("arrived")
 
+will_be_at_home = False
+
 def main():
-    global goal_pub, One, Two, Three, Four, Five
+    global goal_pub, will_be_at_home
     rospy.init_node('hand_track_control', anonymous=True)
     goal_pub = rospy.Publisher('/move_to_goal', Pose, queue_size=10)
     rospy.Subscriber('/move_to_coords', String, from_move_to_coords_callback)
 
     while True:
-        answer = start_camera_and_read_hand()
-        if answer == 1:
-            for pose in Table_1:
-                send_goal(pose)
-                while not arrived_yet:
-                    rospy.sleep(1)
-            One = True
-            rospy.sleep(1)
-        elif answer == 2:
-            for pose in Table_2:
-                send_goal(pose)
-                while not arrived_yet:
-                    rospy.sleep(1)
-            Two = True
-            rospy.sleep(1)
-        elif answer == 3:
-            for pose in Table_3:
-                send_goal(pose)
-                while not arrived_yet:
-                    rospy.sleep(1)
-            Three = True
-            rospy.sleep(1)
-        elif answer == 4:
-            for pose in Table_4:
-                send_goal(pose)
-                while not arrived_yet:
-                    rospy.sleep(1)
-            Four = True
-            rospy.sleep(1)
-        elif answer == 5:
-            for pose in Table_5:
-                send_goal(pose)
-                while not arrived_yet:
-                    rospy.sleep(1)
-            Five = True
-            print(Five)
-            rospy.sleep(1)
-        elif answer == 0:
-            if One:
-                for pose in reversed(Table_1):
-                    send_goal(pose)
-                    while not arrived_yet:
-                        rospy.sleep(1)
-                One = False
-                send_goal(goals[0])
-                rospy.sleep(1)
-            elif Two:
-                for pose in reversed(Table_2):
-                    send_goal(pose)
-                    while not arrived_yet:
-                        rospy.sleep(1)
-                Two = False
-                send_goal(goals[0])
-                rospy.sleep(1)
-            elif Three:
-                for pose in reversed(Table_3):
-                    send_goal(pose)
-                    while not arrived_yet:
-                        rospy.sleep(1)
-                Three = False
-                send_goal(goals[0])
-                rospy.sleep(1)
-            elif Four:
-                for pose in reversed(Table_4):
-                    send_goal(pose)
-                    while not arrived_yet:
-                        rospy.sleep(1)
-                Four = False
-                send_goal(goals[0])
-                rospy.sleep(1)
-            elif Five:
-                for pose in reversed(Table_5):
-                    print(Five)
-                    send_goal(pose)
-                    print(pose)
-                    while not arrived_yet:
-                        rospy.sleep(1)
-                Five = False
-                send_goal(goals[0])
-                print(Five)
-                rospy.sleep(1)
+        answer = input("Destination: ")
+        if answer == '1':
+            target_path = Table_1
+            will_be_at_home = False
+        elif answer == '2':
+            target_path = Table_2
+            will_be_at_home = False
+        elif answer == '3':
+            target_path = Table_3
+            will_be_at_home = False
+        elif answer == '4':
+            target_path = Table_4
+            will_be_at_home = False
+        elif answer == '5':
+            target_path = Table_5
+            will_be_at_home = False
+        elif answer == '0':
+            if will_be_at_home:
+                print("Already at home")
+                continue
+            target_path = reversed(target_path)
+            will_be_at_home = True
+        else:
+            print("Invalid input")
+            continue
 
 
+        for pose in target_path:
+            send_goal(pose)
+            while not arrived_yet:
+                rospy.sleep(2)
+        rospy.sleep(2)
+
+        print(f"Finished path, we are at home = {will_be_at_home}")
 
 
 if __name__ == "__main__":

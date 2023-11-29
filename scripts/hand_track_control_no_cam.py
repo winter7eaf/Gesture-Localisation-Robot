@@ -99,7 +99,7 @@ def main():
                 rospy.sleep(2)
         rospy.sleep(2)
 
-        print("Finished path, now wait for next input to go back")
+        print(f"Finished path, we are at home = {will_be_at_home}")
 
 
 if __name__ == "__main__":
