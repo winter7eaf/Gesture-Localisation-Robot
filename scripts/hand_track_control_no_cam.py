@@ -60,7 +60,7 @@ def from_move_to_coords_callback(msg):
 will_be_at_home = False
 
 def main():
-    global goal_pub, One, Two, Three, Four, Five
+    global goal_pub, will_be_at_home
     rospy.init_node('hand_track_control', anonymous=True)
     goal_pub = rospy.Publisher('/move_to_goal', Pose, queue_size=10)
     rospy.Subscriber('/move_to_coords', String, from_move_to_coords_callback)
@@ -69,14 +69,19 @@ def main():
         answer = input("Destination: ")
         if answer == '1':
             target_path = Table_1
+            will_be_at_home = False
         elif answer == '2':
             target_path = Table_2
+            will_be_at_home = False
         elif answer == '3':
             target_path = Table_3
+            will_be_at_home = False
         elif answer == '4':
             target_path = Table_4
+            will_be_at_home = False
         elif answer == '5':
             target_path = Table_5
+            will_be_at_home = False
         elif answer == '0':
             if will_be_at_home:
                 print("Already at home")
