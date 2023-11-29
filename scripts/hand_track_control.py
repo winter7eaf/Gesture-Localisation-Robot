@@ -360,6 +360,7 @@ def main():
                 while not arrived_yet:
                     rospy.sleep(1)
             Five = True
+            print(Five)
             rospy.sleep(1)
         elif answer == 0:
             if One:
@@ -368,6 +369,7 @@ def main():
                     while not arrived_yet:
                         rospy.sleep(1)
                 One = False
+                send_goal(goals[0])
                 rospy.sleep(1)
             elif Two:
                 for pose in reversed(Table_2):
@@ -375,6 +377,7 @@ def main():
                     while not arrived_yet:
                         rospy.sleep(1)
                 Two = False
+                send_goal(goals[0])
                 rospy.sleep(1)
             elif Three:
                 for pose in reversed(Table_3):
@@ -382,6 +385,7 @@ def main():
                     while not arrived_yet:
                         rospy.sleep(1)
                 Three = False
+                send_goal(goals[0])
                 rospy.sleep(1)
             elif Four:
                 for pose in reversed(Table_4):
@@ -389,13 +393,18 @@ def main():
                     while not arrived_yet:
                         rospy.sleep(1)
                 Four = False
+                send_goal(goals[0])
                 rospy.sleep(1)
             elif Five:
                 for pose in reversed(Table_5):
+                    print(Five)
                     send_goal(pose)
+                    print(pose)
                     while not arrived_yet:
                         rospy.sleep(1)
                 Five = False
+                send_goal(goals[0])
+                print(Five)
                 rospy.sleep(1)
 
 
