@@ -1,0 +1,13 @@
+<launch>
+
+   <master auto="start"/>
+   <param name="/use_sim_time" value="true"/>
+
+   <node name="map_server" pkg="map_server" type="map_server" args="$(find Gesture-Localisation-Robot)/data/cafe2.yaml" />
+   <node pkg="stage_ros" type="stageros" name="stageros" args="$(find Gesture-Localisation-Robot)/data/cafe2.world" respawn="false" />
+   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find Gesture-Localisation-Robot)/config/map_config_rviz.rviz"/>
+   <node name="pf_localisation_node" pkg="Gesture-Localisation-Robot" type="node.py" output="screen"/>
+   <node name="move_to_coords" pkg="Gesture-Localisation-Robot" type="move_to_coords.py" output="screen"/>
+   <node name="hand_track_control" pkg="Gesture-Localisation-Robot" type="hand_track_control.py" output="screen"/>
+
+</launch>
