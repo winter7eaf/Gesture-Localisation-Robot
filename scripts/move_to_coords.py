@@ -9,7 +9,7 @@ from std_msgs.msg import String
 
 ANGLE_TOLERANCE = 0.3
 DISTANCE_TOLERANCE = 0.5
-OBSTACLE_DISTANCE_THRESHOLD = 1  # meters for obstacle detection
+OBSTACLE_DISTANCE_THRESHOLD = 0.7  # meters for obstacle detection
 TURNING_SPEED = 1.0  # Speed at which the robot turns for obstacle avoidance
 FORWARD_SPEED = 1.0  # Forward movement speed towards the goal
 
@@ -95,10 +95,10 @@ def move():
         print(f"doing evasive action: {clear_direction}")
         if clear_direction == 'left':
             twist.angular.z = TURNING_SPEED * 3
-            twist.linear.x = FORWARD_SPEED
+            twist.linear.x = FORWARD_SPEED / 2
         elif clear_direction == 'right':
             twist.angular.z = -TURNING_SPEED * 3
-            twist.linear.x = FORWARD_SPEED
+            twist.linear.x = FORWARD_SPEED / 2
     else:
         # If the path is clear, adjust heading towards the target
         angle_diff = target_yaw - yaw
