@@ -43,8 +43,9 @@ def publish_initial_pose_estimate():
     pose.pose.pose.orientation.w = 0.9999726377442305
     pose.pose.covariance = [0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06853892326654787]
 
-    time.sleep(1)
+    time.sleep(5)
     pub.publish(pose)
+    print("published initial pose estimate")
 
 if __name__ == '__main__':
     try:
