@@ -17,7 +17,7 @@ class PFLocaliser(PFLocaliserBase):
         super(PFLocaliser, self).__init__()
         
         # ----- Set motion model parameters
-        self.INITIAL_PARTICLE_COUNT = 1000		# Number of particles to use
+        self.INITIAL_PARTICLE_COUNT = 500		# Number of particles to use
         self.POSITION_STD_DEV = 1
         self.ORIENTATION_STD_DEV = 1
         self.ODOM_ROTATION_NOISE = 0.005 		# Odometry model rotation noise
