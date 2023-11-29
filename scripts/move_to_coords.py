@@ -7,34 +7,34 @@ from geometry_msgs.msg import Quaternion, Pose
 from sensor_msgs.msg import LaserScan, Range
 from std_msgs.msg import String
 
-
-COORD_TO_MOVE_TO = None
-pose_message = None
-TOLERANCE = 0.3
+ANGLE_TOLERANCE = 0.3
 DISTANCE_TOLERANCE = 0.5
-told_about_finished = False
-scan_data = None
-
 OBSTACLE_DISTANCE_THRESHOLD = 1  # meters for obstacle detection
 TURNING_SPEED = 1.0  # Speed at which the robot turns for obstacle avoidance
 FORWARD_SPEED = 1.0  # Forward movement speed towards the goal
-ANGLE_RANGE = 30  # Angle range to consider for each direction (in degrees for obstacle detection)
+
+coord_to_move_to = None
+pose_cache = None
+scan_cache = None
+told_about_finished = False
 
 
 def pose_callback(msg):
-    global pose_message
-    pose_message = msg
+    global pose_cache
+    pose_cache = msg
 
 
 def move_to_goal_callback(msg):
-    global COORD_TO_MOVE_TO, told_about_finished
-    COORD_TO_MOVE_TO = (msg.position.x, msg.position.y)
+    global coord_to_move_to, told_about_finished
+    coord_to_move_to = (msg.position.x, msg.position.y)
     told_about_finished = False
     print("got new goal")
 
+
 def scan_data_callback(msg):
-    global scan_data
-    scan_data = msg
+    global scan_cache
+    scan_cache = msg
+
 
 def find_clear_direction_v2(scan_data):
     # get the distance of in front of the robot
@@ -51,31 +51,32 @@ def find_clear_direction_v2(scan_data):
 
     # check average distance of each side
     num_ranges = len(scan_data.ranges)
-    avg_distance_right = sum(scan_data.ranges[:num_ranges//2]) / (num_ranges//2)
-    avg_distance_left = sum(scan_data.ranges[num_ranges//2:]) / (num_ranges//2)
+    avg_distance_right = sum(scan_data.ranges[:num_ranges // 2]) / (num_ranges // 2)
+    avg_distance_left = sum(scan_data.ranges[num_ranges // 2:]) / (num_ranges // 2)
     if avg_distance_left > avg_distance_right:
         return 'left'
     else:
         return 'right'
 
+
 def move():
-    global pose_message, told_about_finished, scan_data
-    if not pose_message:
+    global pose_cache, told_about_finished, scan_cache
+    if not pose_cache:
         return
-    if not COORD_TO_MOVE_TO:
+    if not coord_to_move_to:
         return
 
     # coords
-    x, y = pose_message.pose.pose.position.x, pose_message.pose.pose.position.y
-    yaw = getHeading(pose_message.pose.pose.orientation)
+    x, y = pose_cache.pose.pose.position.x, pose_cache.pose.pose.position.y
+    yaw = getHeading(pose_cache.pose.pose.orientation)
 
     # calculate the distance to the target
-    distance = math.sqrt((COORD_TO_MOVE_TO[0] - x) ** 2 + (COORD_TO_MOVE_TO[1] - y) ** 2)
+    distance = math.sqrt((coord_to_move_to[0] - x) ** 2 + (coord_to_move_to[1] - y) ** 2)
     # calculate the yaw to the target
-    target_yaw = math.atan2(COORD_TO_MOVE_TO[1] - y, COORD_TO_MOVE_TO[0] - x)
+    target_yaw = math.atan2(coord_to_move_to[1] - y, coord_to_move_to[0] - x)
 
-    if scan_data:
-        clear_direction = find_clear_direction_v2(scan_data)
+    if scan_cache:
+        clear_direction = find_clear_direction_v2(scan_cache)
     else:
         print("no scan data")
         clear_direction = 'front'
@@ -93,10 +94,10 @@ def move():
         # If there's an obstacle, turn towards the clearest direction
         print(f"doing evasive action: {clear_direction}")
         if clear_direction == 'left':
-            twist.angular.z = TURNING_SPEED*3
+            twist.angular.z = TURNING_SPEED * 3
             twist.linear.x = FORWARD_SPEED
         elif clear_direction == 'right':
-            twist.angular.z = -TURNING_SPEED*3
+            twist.angular.z = -TURNING_SPEED * 3
             twist.linear.x = FORWARD_SPEED
     else:
         # If the path is clear, adjust heading towards the target
@@ -105,14 +106,13 @@ def move():
             angle_diff -= 2 * math.pi
         elif angle_diff < -math.pi:
             angle_diff += 2 * math.pi
-        if abs(angle_diff) > TOLERANCE:
+        if abs(angle_diff) > ANGLE_TOLERANCE:
             twist.angular.z = TURNING_SPEED if angle_diff > 0 else -TURNING_SPEED
         else:
             # Move forward if facing the target
             twist.linear.x = FORWARD_SPEED
 
     movement_pub.publish(twist)
-
 
 
 def main():
@@ -148,14 +148,14 @@ def rotateQuaternion(q_orig, yaw):
     p = 0
     y = yaw / 2.0
     r = 0
- 
+
     sinp = math.sin(p)
     siny = math.sin(y)
     sinr = math.sin(r)
     cosp = math.cos(p)
     cosy = math.cos(y)
     cosr = math.cos(r)
- 
+
     q_headingChange.x = sinr * cosp * cosy - cosr * sinp * siny
     q_headingChange.y = cosr * sinp * cosy + sinr * cosp * siny
     q_headingChange.z = cosr * cosp * siny - sinr * sinp * cosy
@@ -168,7 +168,7 @@ def rotateQuaternion(q_orig, yaw):
     return multiply_quaternions(q_headingChange, q_orig)
 
 
-def multiply_quaternions( qa, qb ):
+def multiply_quaternions(qa, qb):
     """
     Multiplies two quaternions to give the rotation of qb by qa.
     
@@ -179,7 +179,7 @@ def multiply_quaternions( qa, qb ):
        | (geometry_msgs.msg.Quaternion): qb rotated by qa.
     """
     combined = Quaternion()
-    
+
     combined.w = (qa.w * qb.w - qa.x * qb.x - qa.y * qb.y - qa.z * qb.z)
     combined.x = (qa.x * qb.w + qa.w * qb.x + qa.y * qb.z - qa.z * qb.y)
     combined.y = (qa.w * qb.y - qa.x * qb.z + qa.y * qb.w + qa.z * qb.x)
