@@ -25,23 +25,20 @@ sudo apt upgrade && sudo apt update
 This package mainly relies on two libraries: [Mediapipe Machine
 Learning library](https://github.com/google/mediapipe) developed by Google and [OpenCV](https://github.com/opencv/opencv) Open
 source Computer Vision library (for real time hand detection). <br />
-- `pip install Madiapipe`
-- `pip install opencv`
+- `pip install mediapipe`
+- `pip install opencv-python`
 
 ## Testing Simulation and Installation
 
 If everything installed correctly, the following steps should provide
-a very simplistic simulation of a robot in a provided world map.
+our simulation of a robot in a cafe map.
 
-1. In one terminal, run roscore.
-2. In another, run `rosrun stage_ros stageros <catkin_ws>/src/socspioneer/data/meeting.world`.
-This should start a simple simulated world with a robot and a map.
-3. In a third terminal, run `roslaunch socspioneer keyboard_teleop.launch`.
-
-This would allow you to move the robot using keyboard commands. Note that
-when controlling using the keyboard control, the terminal where the
-keyboard control node is running should be in focus (click on the terminal
-before using the keys to control the robot).
+1. `cd ~/catkin_ws`
+2. Run `roslaunch Gesture-Localisation-Robot map_only_v2.launch`
+This should start Stage Ros and Rviz with our cafe map.
+3. Click the *2D Pose Estimate* button, then draw an arrow on the map showing the
+approximate location and direction in which your robot is facing in Stage. 
+4. In another terminal, run `rosrun Gesture-Localisation-Robot hand_track_control.py`. Camera will show up. Make sure camera are accessible.
 
 
 Joint recog.:<br />
