@@ -57,6 +57,7 @@ def from_move_to_coords_callback(msg):
         arrived_yet = True
         print("arrived")
 
+will_be_at_home = False
 
 def main():
     global goal_pub, One, Two, Three, Four, Five
@@ -77,7 +78,11 @@ def main():
         elif answer == '5':
             target_path = Table_5
         elif answer == '0':
+            if will_be_at_home:
+                print("Already at home")
+                continue
             target_path = reversed(target_path)
+            will_be_at_home = True
         else:
             print("Invalid input")
             continue
