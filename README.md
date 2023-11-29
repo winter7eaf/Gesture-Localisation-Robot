@@ -44,11 +44,11 @@ This will allow you to input hand gesture from 0 to 5. 0 is corresponding the ta
 
 ## Contributor
 
-Chit Lee<br />
-Juni Katsu<br />
-Cheuk Yu Lam<br />
-Abbas Mandasorwala<br />
-Kozerenko Elizaveta<br />
+Chit Lee ([Github](https://github.com/chit-uob))<br />
+Juni Katsu ([Github](https://github.com/JuniJoo))<br />
+Cheuk Yu Lam ([Github](https://github.com/winter7eaf))<br />
+Abbas Mandasorwala ([Github](https://github.com/abbas-119)<br />
+Kozerenko Elizaveta ([Github](https://github.com/IBMr))<br />
 
 [//]: # (## Alternative testing with Move_base library)
 
