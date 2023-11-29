@@ -260,11 +260,12 @@ def start_camera_and_read_hand():
                 print(f"Final Hand = {total_fingers}")
                 return total_fingers
 
-            length, info, img = detector.findDistance(lm_list[8][0:2], lm_list[12][0:2], img, color=(255, 0, 255), scale=10)
+            length, info, img = detector.findDistance(lm_list[8][0:2], lm_list[12][0:2], img, color=(255, 0, 255),
+                                                      scale=10)
 
         if img is not None:
             cv2.imshow("Image", img)
-        cv2.waitKey(1)
+        cv2.waitKey(10)
 
 
 goals = [
@@ -294,7 +295,9 @@ Table_3 = [goals[0], goals[1], goals[6]]
 Table_2 = [goals[0], goals[1], goals[2], goals[3], goals[5]]
 Table_1 = [goals[0], goals[1], goals[2], goals[3], goals[4]]
 
-target_path = None # will be set to one of the above tables
+target_path = None  # will be set to one of the above tables
+arrived_yet = False
+will_be_at_home = True
 
 
 def send_goal(pose):
@@ -306,7 +309,6 @@ def send_goal(pose):
     goal_pub.publish(goal)
     print("published goal")
 
-arrived_yet = False
 
 def from_move_to_coords_callback(msg):
     global arrived_yet
@@ -314,10 +316,9 @@ def from_move_to_coords_callback(msg):
         arrived_yet = True
         print("arrived")
 
-will_be_at_home = True
 
 def main():
-    global goal_pub, will_be_at_home
+    global goal_pub, will_be_at_home, target_path
     rospy.init_node('hand_track_control', anonymous=True)
     goal_pub = rospy.Publisher('/move_to_goal', Pose, queue_size=10)
     rospy.Subscriber('/move_to_coords', String, from_move_to_coords_callback)
