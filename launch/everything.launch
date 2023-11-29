@@ -9,5 +9,6 @@
    <node name="pf_localisation_node" pkg="Gesture-Localisation-Robot" type="node.py" output="screen"/>
    <node name="move_to_coords" pkg="Gesture-Localisation-Robot" type="move_to_coords.py" output="screen"/>
    <node name="hand_track_control" pkg="Gesture-Localisation-Robot" type="hand_track_control.py" output="screen"/>
+   <node name="initial_pose_publisher" pkg="Gesture-Localisation-Robot" type="set_initial_pose.py" output="screen"/>
 
 </launch>
