@@ -314,7 +314,7 @@ def from_move_to_coords_callback(msg):
         arrived_yet = True
         print("arrived")
 
-will_be_at_home = False
+will_be_at_home = True
 
 def main():
     global goal_pub, will_be_at_home
@@ -324,21 +324,21 @@ def main():
 
     while True:
         answer = str(start_camera_and_read_hand())
+        if answer in ['1', '2', '3', '4', '5']:
+            if not will_be_at_home:
+                print("Already at table, cannot go to another table")
+            print(f"Going to table {answer}")
+            will_be_at_home = False
         if answer == '1':
             target_path = Table_1
-            will_be_at_home = False
         elif answer == '2':
             target_path = Table_2
-            will_be_at_home = False
         elif answer == '3':
             target_path = Table_3
-            will_be_at_home = False
         elif answer == '4':
             target_path = Table_4
-            will_be_at_home = False
         elif answer == '5':
             target_path = Table_5
-            will_be_at_home = False
         elif answer == '0':
             if will_be_at_home:
                 print("Already at home")
@@ -348,7 +348,6 @@ def main():
         else:
             print("Invalid input")
             continue
-
 
         for pose in target_path:
             send_goal(pose)
