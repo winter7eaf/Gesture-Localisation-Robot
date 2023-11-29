@@ -328,6 +328,7 @@ def main():
         if answer in ['1', '2', '3', '4', '5']:
             if not will_be_at_home:
                 print("Already at table, cannot go to another table")
+                continue
             print(f"Going to table {answer}")
             will_be_at_home = False
         if answer == '1':
