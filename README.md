@@ -6,6 +6,14 @@
 |:--------------------------------:|:-----------------------------------------:|
 | ![](Table5_Robot_Simulation.gif) |        ![](Table5_hand_recog.gif)         |
 
+## Contributor
+
+Chit Lee ([Github](https://github.com/chit-uob))<br />
+Juni Katsu ([Github](https://github.com/JuniJoo))<br />
+Cheuk Yu Lam ([Github](https://github.com/winter7eaf))<br />
+Abbas Mandasorwala ([Github](https://github.com/abbas-119)) <br />
+Kozerenko Elizaveta ([Github](https://github.com/IBMr))<br />
+
 ## Installation
 
 Git clone this repo to your `<catkin_ws>/src` <br />
@@ -46,13 +54,6 @@ approximate location and direction in which your robot is facing in Stage.
 
 This will allow you to input hand gesture from 0 to 5. 0 is corresponding the Till, and 1 to 5 to Tables respectfully. Hold you hand still about 3 seconds, and the robot should start heading to the ordered table number.
 
-## Contributor
-
-Chit Lee ([Github](https://github.com/chit-uob))<br />
-Juni Katsu ([Github](https://github.com/JuniJoo))<br />
-Cheuk Yu Lam ([Github](https://github.com/winter7eaf))<br />
-Abbas Mandasorwala ([Github](https://github.com/abbas-119)) <br />
-Kozerenko Elizaveta ([Github](https://github.com/IBMr))<br />
 
 [//]: # (## Alternative testing with Move_base library)
 
