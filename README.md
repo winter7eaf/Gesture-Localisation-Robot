@@ -2,6 +2,7 @@
 
 `Gesture-Localisaton-Robot` is a package of camera based hand gesture robot control system. This is a official repository of Final assignment of Intelligent Robotics Module at University of Birmingham. <br />
 
+![](https://github.com/winter7eaf/gesture_localisation_robot/blob/main/Table5_Robot_Simulation.gif)
 ## Installation
 
 Git clone this repo to your `<catkin_ws>/src` <br />
