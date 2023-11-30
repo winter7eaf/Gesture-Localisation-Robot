@@ -41,14 +41,14 @@ This should start Stage Ros and Rviz with our cafe map.
 approximate location and direction in which your robot is facing in Stage. 
 4. In another terminal, run `rosrun Gesture-Localisation-Robot hand_track_control.py`. Camera will show up. Make sure camera are accessible.
 
-This will allow you to input hand gesture from 0 to 5. 0 is corresponding the tail, and 1 to 5 to Tables respectfully. Hold you hand still about 3 seconds, and the robot should start heading to the ordered table number.
+This will allow you to input hand gesture from 0 to 5. 0 is corresponding the Till, and 1 to 5 to Tables respectfully. Hold you hand still about 3 seconds, and the robot should start heading to the ordered table number.
 
 ## Contributor
 
 Chit Lee ([Github](https://github.com/chit-uob))<br />
 Juni Katsu ([Github](https://github.com/JuniJoo))<br />
 Cheuk Yu Lam ([Github](https://github.com/winter7eaf))<br />
-Abbas Mandasorwala ([Github](https://github.com/abbas-119)<br />
+Abbas Mandasorwala ([Github](https://github.com/abbas-119)) <br />
 Kozerenko Elizaveta ([Github](https://github.com/IBMr))<br />
 
 [//]: # (## Alternative testing with Move_base library)
