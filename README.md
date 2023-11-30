@@ -52,6 +52,22 @@ source Computer Vision library (for real time hand detection). <br />
 Git clone this repo to your `<catkin_ws>/src` <br />
 Run `catkin_make` <br />
 
+### Compile laser_trace
+
+* Compile laser_trace.cpp (provides laser ray tracing) as follows **if you are not using arm system(windows, unix...)**:
+
+        cd <catkin_ws>/src/gesture_localisation_robot/src/laser_trace
+        ./compile.sh #You may have to '''chmod +x compile.sh'''
+
+* replace `./compile.sh` with `./compilearm.sh`  **if you are using arm system(m1 chip mac)**:
+
+If correctly compiled, you should find `laser_trace.so` in the directory `<catkin_ws>/src/gesture_localisation_robot/src/pf_localisation`.
+If the ***code does not compile*** you need to install PythonBoost from https://github.com/boostorg/python. This requires the download and compiling of Boost and installation of Faber.
+
+### Make scripts executable
+
+You may need to make the varies scripts executable by running `chmod +x {filename}` in the directory `<catkin_ws>/src/gesture_localisation_robot/scripts`.
+
 ## Running the Code
 
 Run `roslaunch Gesture-Localisation-Robot everything.launch` <br />
