@@ -1,6 +1,6 @@
 # GestureCommand: A Camera-Based Gesture Recognition System for Autonomous Table-Specific Delivery Robot
 
-`Gesture-Localisaton-Robot` is a package of camera based hand gesture robot control system. This is the official repository of the Final assignment of Intelligent Robotics Module at University of Birmingham. <br />
+`Gesture-Localisaton-Robot` is a package of camera based hand gesture robot control system. This is the official repository of the final assignment of Intelligent Robotics Module at University of Birmingham. <br />
 
 |       Robot going Table 5        | Ordering robot to Table 5 using mediapipe |
 |:--------------------------------:|:-----------------------------------------:|
@@ -13,6 +13,12 @@ Juni Katsu ([Github](https://github.com/JuniJoo))<br />
 Cheuk Yu Lam ([Github](https://github.com/winter7eaf))<br />
 Abbas Mandasorwala ([Github](https://github.com/abbas-119)) <br />
 Kozerenko Elizaveta ([Github](https://github.com/IBMr))<br />
+
+## Motivation
+
+Imagine you are a barista in a coffee shop. You just made a cup of coffee, and you want it delivered to a customer at a certain table. You have a robot, and you put the cup of coffee on top of it. Your hands are not clean, so it will be problematic to press a touchscreen. How can you tell the robot where to go? <br />
+
+Introducing GestureCommand, a camera-based gesture recognition system for autonomous table-specific delivery robot. You can gesture the robot where to go, and it will go there. <br />
 
 ## Installation
 
@@ -46,7 +52,7 @@ source Computer Vision library (for real time hand detection). <br />
 Git clone this repo to your `<catkin_ws>/src` <br />
 Run `catkin_make` <br />
 
-## Testing Simulation and Installation
+## Running the Code
 
 Run `roslaunch Gesture-Localisation-Robot everything.launch` <br />
 This should start
@@ -58,64 +64,4 @@ This should start
 - hand_track_control.py for the hand tracking and gesture recognition
 - initial_pose_publisher.py for publishing the initial pose of the robot
 
-This will allow you to input hand gesture from 0 to 5. 0 is corresponding the Till, and 1 to 5 to Tables respectfully. Hold you hand still about 3 seconds, and the robot should start heading to the ordered table number.
-
-
-[//]: # (## Alternative testing with Move_base library)
-
-[//]: # ()
-[//]: # (This is testing with Path_finding library `move_base`)
-
-[//]: # (Joint recog.:<br />)
-
-[//]: # ()
-[//]: # ()
-[//]: # (https://developers.google.com/mediapipe/solutions/vision/gesture_recognizer/python#live-stream)
-
-[//]: # ()
-[//]: # (IMPORTANT IMPORTS:<br />)
-
-[//]: # (import cv2 <br />)
-
-[//]: # (import tensorflow as tf  # or import torch)
-
-[//]: # ()
-[//]: # (https://github.com/ahmetgunduz/Real-time-GesRec)
-
-[//]: # (https://github.com/MahmudulAlam/Unified-Gesture-and-Fingertip-Detection)
-
-[//]: # (https://github.com/ErickWendel/live-recognizing-multiple-gestures-tensorflowjs <br />)
-
-[//]: # ()
-[//]: # ()
-[//]: # (https://github.com/kinivi/hand-gesture-recognition-mediapipe)
-
-[//]: # ()
-[//]: # (### Nav Stack with Stage. )
-
-[//]: # (Git clone the following link to your `<catkin_ws>/src` <br />)
-
-[//]: # (https://github.com/ros-planning/navigation_tutorial  <br />)
-
-[//]: # (Then run the following. Use 2D goal arrow to set the goal.)
-
-[//]: # (```commandline)
-
-[//]: # (roscore)
-
-[//]: # ()
-[//]: # (//change in to new terminal)
-
-[//]: # ()
-[//]: # (roslaunch navigation_stage move_base_amcl_2.5cm.launch)
-
-[//]: # (```)
-
-[//]: # (Change the last part respectively )
-
-[//]: # ()
-[//]: # (Install:)
-
-[//]: # (mediapipe)
-
-[//]: # (opencv)
+This will allow you to input hand gesture from 0 to 5. 0 is corresponding the Till, and 1 to 5 to Tables respectfully. Hold you hand still about 3 seconds, and the robot should start heading to the ordered table number. <br />
