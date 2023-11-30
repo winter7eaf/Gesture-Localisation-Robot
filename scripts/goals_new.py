@@ -5,6 +5,7 @@ from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import String
 
+
 rospy.init_node('navigate_robot')
 
 # Updated list of goals with your coordinates
