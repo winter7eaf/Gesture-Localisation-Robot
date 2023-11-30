@@ -102,6 +102,7 @@ def move():
     else:
         # If the path is clear, adjust heading towards the target
         angle_diff = target_yaw - yaw
+        # Make sure angle_diff is between -pi and pi
         if angle_diff > math.pi:
             angle_diff -= 2 * math.pi
         elif angle_diff < -math.pi:
