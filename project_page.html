@@ -215,36 +215,75 @@ This report details the development of a robot's software, designed to improve s
 <!--</section>-->
 <!--&lt;!&ndash; End youtube video &ndash;&gt;-->
 
+<section class="section">
+  <div class="container is-max-desktop">
 
-<!-- Video carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">Single Image Animation</h2>
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-woman">
-          <video poster="" id="woman" autoplay controls muted loop height="100%">
-            <source src="static/videos/vokoscreen-2023-11-30_11-10-17(1).mp4"
-            type="video/mp4">
+    <div class="columns is-centered">
+
+      <!-- Visual Effects. -->
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-3">Simulated robot</h2>
+          <p>
+            Using <i>Stage Ros</i>, the robot is able to between waypoints associated by table number order from camera by hands. We are able to implement object avoidance without using move_base library.
+          </p>
+          <video id="dollyzoom" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/vokoscreen-2023-11-30_11-10-17(1).mp4"
+                    type="video/mp4">
           </video>
         </div>
-        <div class="item item-eyes">
-          <video poster="" id="eyes" autoplay controls muted loop height="100%">
-            <source src="static/videos/Screencast_from_2023-11-30_11-36-26_online-video-cutter.com.mp4"
-            type="video/mp4">
-          </video>
+      </div>
+      <!--/ Visual Effects. -->
+
+      <!-- Matting. -->
+      <div class="column">
+        <h2 class="title is-3">Hand Gesture Recognition</h2>
+        <div class="columns is-centered">
+          <div class="column content">
+            <p>
+              Showing specific hand gestures, (zero to five) allows to send order to robot which table number to go to. This mainly relies on two libraries: Mediapipe Machine Learning library developed by Google and OpenCV Open source Computer Vision library (for real time hand detection).
+            </p>
+            <video id="matting-video" controls playsinline height="100%">
+              <source src="./static/videos/Screencast_from_2023-11-30_11-36-26_online-video-cutter.com.mp4"
+                      type="video/mp4">
+            </video>
+          </div>
+
         </div>
-<!--        <div class="item item-star-tp">-->
-<!--          <video poster="" id="star-tp" autoplay controls muted loop height="100%">-->
-<!--            <source src="static/videos/star.mp4"-->
-<!--            type="video/mp4">-->
-<!--          </video>-->
-<!--        </div>-->
       </div>
     </div>
+    <!--/ Matting. -->
+
+
+<!--    &lt;!&ndash; Concurrent Work. &ndash;&gt;-->
+<!--    <div class="columns is-centered">-->
+<!--      <div class="column is-full-width">-->
+<!--        <h2 class="title is-3">Related Links</h2>-->
+
+<!--        <div class="content has-text-justified">-->
+<!--          <p>-->
+<!--            There's a lot of excellent work that was introduced around the same time as ours.-->
+<!--          </p>-->
+<!--          <p>-->
+<!--            <a href="https://arxiv.org/abs/2104.09125">Progressive Encoding for Neural Optimization</a> introduces an idea similar to our windowed position encoding for coarse-to-fine optimization.-->
+<!--          </p>-->
+<!--          <p>-->
+<!--            <a href="https://www.albertpumarola.com/research/D-NeRF/index.html">D-NeRF</a> and <a href="https://gvv.mpi-inf.mpg.de/projects/nonrigid_nerf/">NR-NeRF</a>-->
+<!--            both use deformation fields to model non-rigid scenes.-->
+<!--          </p>-->
+<!--          <p>-->
+<!--            Some works model videos with a NeRF by directly modulating the density, such as <a href="https://video-nerf.github.io/">Video-NeRF</a>, <a href="https://www.cs.cornell.edu/~zl548/NSFF/">NSFF</a>, and <a href="https://neural-3d-video.github.io/">DyNeRF</a>-->
+<!--          </p>-->
+<!--          <p>-->
+<!--            There are probably many more by the time you are reading this. Check out <a href="https://dellaert.github.io/NeRF/">Frank Dellart's survey on recent NeRF papers</a>, and <a href="https://github.com/yenchenlin/awesome-NeRF">Yen-Chen Lin's curated list of NeRF papers</a>.-->
+<!--          </p>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash;/ Concurrent Work. &ndash;&gt;-->
+
   </div>
 </section>
-<!-- End video carousel -->
 
 
 
@@ -270,7 +309,7 @@ This report details the development of a robot's software, designed to improve s
   <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
-      <pre><code>BibTex Code Here</code></pre>
+      <pre><code>No Bibtex is included since this is not a published paper.</code></pre>
     </div>
 </section>
 <!--End BibTex citation -->

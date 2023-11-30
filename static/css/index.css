@@ -112,6 +112,12 @@ body {
 
 .results-carousel {
   overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .results-carousel .item {
