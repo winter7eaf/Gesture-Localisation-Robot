@@ -1,12 +1,9 @@
-# GestureCommand: A Camera-Based Gesture Recognition System for Autonomous Table-Specific Delivery Robotics
+# GestureCommand: A Camera-Based Gesture Recognition System for Autonomous Table-Specific Delivery Robot
 
-`Gesture-Localisaton-Robot` is a package of camera based hand gesture robot control system. This is a official repository of Final assignment of Intelligent Robotics Module at University of Birmingham. <br />
+`Gesture-Localisaton-Robot` is a package of camera based hand gesture robot control system. This is the official repository of the Final assignment of Intelligent Robotics Module at University of Birmingham. <br />
 
 ![](Table5_Robot_Simulation.gif)
 ## Installation
-
-Git clone this repo to your `<catkin_ws>/src` <br />
-**NOTE**: *We assume catkin environment is set up already. Run `catkin_make` after all the installation.*
 
 ### Ideal Working Environment
 
@@ -15,13 +12,17 @@ Git clone this repo to your `<catkin_ws>/src` <br />
 (desktop-full)
 - Python 3.8
 
+### Install ROS Noetic
+
+[Install ROS Noetic](http://wiki.ros.org/ROS/Installation/TwoLineInstall/). <br />
+[Set up your catkin workspace](https://wiki.ros.org/catkin/Tutorials/create_a_workspace). <br />
+
 ### Install dependencies
 
 Before install everything, run the upgrade command so your system stays update to date.
-```
-sudo apt upgrade && sudo apt update
-```
-- `sudo apt install ros-$ROS_DISTRO-pr2-teleop ros-$ROS_DISTRO-joy ros-$ROS_DISTRO-slam-gmapping ros-$ROS_DISTRO-map-server`.
+
+- `sudo apt upgrade && sudo apt update`
+- `sudo apt install ros-$ROS_DISTRO-pr2-teleop ros-$ROS_DISTRO-map-server`.
 
 This package mainly relies on two libraries: [Mediapipe Machine
 Learning library](https://github.com/google/mediapipe) developed by Google and [OpenCV](https://github.com/opencv/opencv) Open
@@ -29,17 +30,22 @@ source Computer Vision library (for real time hand detection). <br />
 - `pip install mediapipe`
 - `pip install opencv-python`
 
+### Clone our repository and build
+
+Git clone this repo to your `<catkin_ws>/src` <br />
+Run `catkin_make` <br />
+
 ## Testing Simulation and Installation
 
-If everything installed correctly, the following steps should provide
-our simulation of a robot in a cafe map.
-
-1. `cd ~/catkin_ws`
-2. Run `roslaunch Gesture-Localisation-Robot map_only_v2.launch`
-This should start Stage Ros and Rviz with our cafe map.
-3. Click the *2D Pose Estimate* button, then draw an arrow on the map showing the
-approximate location and direction in which your robot is facing in Stage. 
-4. In another terminal, run `rosrun Gesture-Localisation-Robot hand_track_control.py`. Camera will show up. Make sure camera are accessible.
+Run `roslaunch Gesture-Localisation-Robot everything.launch` <br />
+This should start
+- the map server
+- the robot simulator stage_ros
+- rviz for visualisation
+- pf_localisation for particle filter localisation
+- move_to_coords.py for the local planner which moves the robot to the goal coordinates
+- hand_track_control.py for the hand tracking and gesture recognition
+- initial_pose_publisher.py for publishing the initial pose of the robot
 
 This will allow you to input hand gesture from 0 to 5. 0 is corresponding the Till, and 1 to 5 to Tables respectfully. Hold you hand still about 3 seconds, and the robot should start heading to the ordered table number.
 
