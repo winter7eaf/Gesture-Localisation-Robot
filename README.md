@@ -13,7 +13,7 @@ Chit Lee ([Github](https://github.com/chit-uob))<br />
 Juni Katsu ([Github](https://github.com/JuniJoo))<br />
 Cheuk Yu Lam ([Github](https://github.com/winter7eaf))<br />
 Abbas Mandasorwala ([Github](https://github.com/abbas-119)) <br />
-Kozerenko Elizaveta ([Github](https://github.com/IBMr))<br />
+Kozerenko Elizaveta ([Github](https://github.com/Lizzzzzok)<br />
 
 ## Motivation
 
