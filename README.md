@@ -17,7 +17,7 @@ Kozerenko Elizaveta ([Github](https://github.com/Lizzzzzok))<br />
 
 ## Motivation
 
-Imagine you are a barista in a coffee shop. You just made a cup of coffee, and you want it delivered to a customer at a certain table. You have a robot, and you put the cup of coffee on top of it. Your hands are not clean, so it will be problematic to press a touchscreen. How can you tell the robot where to go? <br />
+Imagining you are a barista in a coffee shop. You just made a cup of coffee, and you want it delivered to a customer at a certain table. You have a robot, and you put the cup of coffee on top of it. Your hands are not clean, so it will be problematic to press a touchscreen. How can you tell the robot where to go? <br />
 
 Introducing GestureCommand, a camera-based gesture recognition system for autonomous table-specific delivery robot. You can gesture the robot where to go, and it will go there. <br />
 
