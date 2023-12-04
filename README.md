@@ -1,6 +1,6 @@
 # GestureCommand: A Simulated Camera-Based Gesture Recognition System for Autonomous Table-Specific Delivery Robot
 
-`Gesture-Localisaton-Robot` is a package of camera based hand gesture robot control system. This is the official repository of the final assignment of Intelligent Robotics Module at University of Birmingham. <br />
+`Gesture-Localisaton-Robot` is a package of camera based hand gesture robot control system. This is the official repository of the final team assignment of Intelligent Robotics Module at University of Birmingham. <br />
 A demonstration can be viewed on our [Project website](https://winter7eaf.github.io/gesture_localisation_robot/).<br />
 
 |       Robot going Table 5        | Ordering robot to Table 5 using mediapipe |
